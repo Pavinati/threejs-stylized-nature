@@ -13,10 +13,11 @@ interface BushArgs {
 }
 
 interface BushesProps {
-  position?: number | Vector3 | [x: number, y: number, z: number];
+  position?: Vector3;
+  rotation?: Euler;
 }
 
-export default function Bushes({ position = [0, 0, 0] }: BushesProps) {
+export default function Bushes({ position, rotation }: BushesProps) {
   const bushArgs = useMemo(() => {
     const args: BushArgs[] = [];
     for (let i = 0; i < BUSH_COUNT; i++) {
@@ -33,7 +34,7 @@ export default function Bushes({ position = [0, 0, 0] }: BushesProps) {
   }, []);
 
   return (
-    <group position={position} name="bushes">
+    <group position={position} rotation={rotation} name="bushes">
       <GrassTileBase />
       {bushArgs.map(({ position, rotation, scale }, index) => (
         <Bush

@@ -2,8 +2,22 @@ import { CameraHelper, PCFShadowMap } from "three";
 import { Canvas } from "@react-three/fiber";
 import { Helper, OrbitControls, OrthographicCamera } from "@react-three/drei";
 import { useControls } from "leva";
+import { HexGrid, type HexGridCell } from "./HexGrid.tsx";
 import Trees from "./tiles/Trees.tsx";
 import Rocks from "./tiles/Rocks.tsx";
+import Bushes from "./tiles/Bushes.tsx";
+import Mushrooms from "./tiles/Mushrooms.tsx";
+import Stumps from "./tiles/Stumps.tsx";
+import Logs from "./tiles/Logs.tsx";
+
+const SCENE_LAYOUT: HexGridCell[] = [
+  { q: 0, r: 0, Tile: Trees },
+  { q: 1, r: 0, Tile: Rocks },
+  { q: 0, r: 1, Tile: Bushes },
+  { q: 1, r: -1, Tile: Logs },
+  { q: 0, r: -1, Tile: Mushrooms },
+  { q: -1, r: 0, Tile: Stumps },
+];
 
 function App() {
   const { showLightHelper } = useControls({
@@ -40,8 +54,7 @@ function App() {
           {showLightHelper && <Helper type={CameraHelper} />}
         </orthographicCamera>
       </directionalLight>
-      <Trees position={[0, 0, 0]} />
-      <Rocks position={[3.5, 0, 0]} />
+      <HexGrid cells={SCENE_LAYOUT} tileSize={2} />
     </Canvas>
   );
 }

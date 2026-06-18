@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Vector3 } from "three";
+import { Euler, Vector3 } from "three";
 import { GrassTileBase } from "../components/GrassTileBase";
 import { Tree } from "../components/Tree";
 
@@ -7,10 +7,11 @@ const TREE_COUNT = 5;
 const TREE_POSITION_RANGE = 1.5;
 
 interface TreesProps {
-  position?: number | Vector3 | [x: number, y: number, z: number];
+  position?: Vector3;
+  rotation?: Euler;
 }
 
-export default function Trees({ position = [0, 0, 0] }: TreesProps) {
+export default function Trees({ position, rotation }: TreesProps) {
   const threePositions = useMemo(() => {
     const positions: Vector3[] = [];
     for (let i = 0; i < TREE_COUNT; i++) {
@@ -23,7 +24,7 @@ export default function Trees({ position = [0, 0, 0] }: TreesProps) {
   }, []);
 
   return (
-    <group position={position} name="trees">
+    <group position={position} rotation={rotation} name="trees">
       <GrassTileBase />
       {threePositions.map((pos, index) => (
         <Tree key={index} position={pos} />

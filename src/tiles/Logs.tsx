@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Vector3 } from "three";
+import { Euler, Vector3 } from "three";
 import { GrassTileBase } from "../components/GrassTileBase";
 import { Log } from "../components/Log";
 
@@ -12,10 +12,11 @@ interface LogArgs {
 }
 
 interface LogsProps {
-  position?: number | Vector3 | [x: number, y: number, z: number];
+  position?: Vector3;
+  rotation?: Euler;
 }
 
-export default function Logs({ position = [0, 0, 0] }: LogsProps) {
+export default function Logs({ position, rotation }: LogsProps) {
   const logArgs = useMemo(() => {
     const args: LogArgs[] = [];
     for (let i = 0; i < LOG_COUNT; i++) {
@@ -34,7 +35,7 @@ export default function Logs({ position = [0, 0, 0] }: LogsProps) {
   }, []);
 
   return (
-    <group position={position} name="logs">
+    <group position={position} rotation={rotation} name="logs">
       <GrassTileBase />
       {logArgs.map(({ position, rotation }, index) => (
         <Log key={index} position={position} rotation={[0, rotation, 0]} />

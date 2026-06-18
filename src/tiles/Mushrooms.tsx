@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Vector3 } from "three";
+import { Euler, Vector3 } from "three";
 import { GrassTileBase } from "../components/GrassTileBase";
 import { Mushroom } from "../components/Mushroom";
 
@@ -12,10 +12,11 @@ interface MushroomArgs {
 }
 
 interface MushroomsProps {
-  position?: number | Vector3 | [x: number, y: number, z: number];
+  position?: Vector3;
+  rotation?: Euler;
 }
 
-export default function Mushrooms({ position = [0, 0, 0] }: MushroomsProps) {
+export default function Mushrooms({ position, rotation }: MushroomsProps) {
   const mushroomArgs = useMemo(() => {
     const args: MushroomArgs[] = [];
     for (let i = 0; i < MUSHROOM_COUNT; i++) {
@@ -31,7 +32,7 @@ export default function Mushrooms({ position = [0, 0, 0] }: MushroomsProps) {
   }, []);
 
   return (
-    <group position={position} name="mushrooms">
+    <group position={position} rotation={rotation} name="mushrooms">
       <GrassTileBase />
       {mushroomArgs.map(({ position, scale }, index) => (
         <Mushroom key={index} position={position} scale={scale} />

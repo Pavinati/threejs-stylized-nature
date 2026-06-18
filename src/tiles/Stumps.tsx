@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Vector3 } from "three";
+import { Euler, Vector3 } from "three";
 import { GrassTileBase } from "../components/GrassTileBase";
 import { Stump } from "../components/Stump";
 
@@ -13,10 +13,11 @@ interface StumpArgs {
 }
 
 interface StumpsProps {
-  position?: number | Vector3 | [x: number, y: number, z: number];
+  position?: Vector3;
+  rotation?: Euler;
 }
 
-export default function Stumps({ position = [0, 0, 0] }: StumpsProps) {
+export default function Stumps({ position, rotation }: StumpsProps) {
   const stumpArgs = useMemo(() => {
     const args: StumpArgs[] = [];
     for (let i = 0; i < STUMP_COUNT; i++) {
@@ -33,7 +34,7 @@ export default function Stumps({ position = [0, 0, 0] }: StumpsProps) {
   }, []);
 
   return (
-    <group position={position} name="stumps">
+    <group position={position} rotation={rotation} name="stumps">
       <GrassTileBase />
       {stumpArgs.map(({ position, rotation, scale }, index) => (
         <Stump

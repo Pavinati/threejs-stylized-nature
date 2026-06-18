@@ -1,5 +1,5 @@
 import { Fragment, useMemo } from "react";
-import { Vector3 } from "three";
+import { Euler, Vector3 } from "three";
 import { GrassTileBase } from "../components/GrassTileBase";
 import { Rock } from "../components/Rock";
 
@@ -15,10 +15,11 @@ interface RockArgs {
 }
 
 interface RocksProps {
-  position?: number | Vector3 | [x: number, y: number, z: number];
+  position?: Vector3;
+  rotation?: Euler;
 }
 
-export default function Rocks({ position = [0, 0, 0] }: RocksProps) {
+export default function Rocks({ position, rotation }: RocksProps) {
   const rockArgs = useMemo(() => {
     const randomizedArgs: RockArgs[] = [];
     for (let i = 0; i < ROCK_COUNT; i++) {
@@ -51,7 +52,7 @@ export default function Rocks({ position = [0, 0, 0] }: RocksProps) {
   }, []);
 
   return (
-    <group position={position} name="rocks">
+    <group position={position} rotation={rotation} name="rocks">
       <GrassTileBase />
       {rockArgs.map(
         (

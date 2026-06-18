@@ -3,6 +3,7 @@ import { Canvas } from "@react-three/fiber";
 import { Helper, OrbitControls, OrthographicCamera } from "@react-three/drei";
 import { useControls } from "leva";
 import Trees from "./tiles/Trees.tsx";
+import Rocks from "./tiles/Rocks.tsx";
 
 function App() {
   const { showLightHelper } = useControls({
@@ -40,6 +41,7 @@ function App() {
         </orthographicCamera>
       </directionalLight>
       <Trees position={[0, 0, 0]} />
+      <Rocks position={[3.5, 0, 0]} />
     </Canvas>
   );
 }

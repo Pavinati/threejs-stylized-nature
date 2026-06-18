@@ -1,9 +1,17 @@
 import { CameraHelper, PCFShadowMap } from "three";
 import { Canvas } from "@react-three/fiber";
 import { Helper, OrbitControls, OrthographicCamera } from "@react-three/drei";
+import { useControls } from "leva";
 import Trees from "./tiles/Trees.tsx";
 
 function App() {
+  const { showLightHelper } = useControls({
+    showLightHelper: {
+      value: false,
+      name: "Show Light Helper",
+    },
+  });
+
   return (
     <Canvas
       className="fixed w-screen"
@@ -28,7 +36,7 @@ function App() {
           top={3}
           bottom={-3}
         >
-          <Helper type={CameraHelper} />
+          {showLightHelper && <Helper type={CameraHelper} />}
         </orthographicCamera>
       </directionalLight>
       <Trees position={[0, 0, 0]} />

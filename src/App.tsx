@@ -22,10 +22,18 @@ const SCENE_LAYOUT: HexGridCell[] = [
 ];
 
 function App() {
-  const { showLightHelper } = useControls({
+  const { showLightHelper, shadowBias } = useControls({
     showLightHelper: {
       value: false,
       name: "Show Light Helper",
+    },
+    shadowBias: {
+      name: "Shadow Bias",
+      pad: 4,
+      value: 0.003,
+      step: 0.0001,
+      min: 0,
+      max: 0.01,
     },
   });
 
@@ -43,15 +51,16 @@ function App() {
         intensity={1}
         castShadow
         shadow-mapSize={[1024, 1024]}
+        shadow-bias={shadowBias}
       >
         <orthographicCamera
           attach="shadow-camera"
-          near={2}
+          near={3}
           far={13}
-          left={-3}
-          right={3}
-          top={3}
-          bottom={-3}
+          left={-5}
+          right={5}
+          top={5}
+          bottom={-5}
         >
           {showLightHelper && <Helper type={CameraHelper} />}
         </orthographicCamera>

@@ -65,7 +65,7 @@ function App() {
           {showLightHelper && <Helper type={CameraHelper} />}
         </orthographicCamera>
       </directionalLight>
-      <HexGrid cells={SCENE_LAYOUT} tileSize={2} />
+      <HexGrid cells={SCENE_LAYOUT} tileSize={2} showEmptySlots />
     </Canvas>
   );
 }

@@ -17,10 +17,36 @@
 // see more at: https://www.redblobgames.com/grids/hexagons/
 import type { ComponentType } from "react";
 import { Euler, Vector3 } from "three";
+import { EmptyTileSlot } from "./components/EmptyTileSlot.tsx";
 
 export interface AxialCoord {
   q: number;
   r: number;
+}
+
+const NEIGHBOR_DIRECTIONS: AxialCoord[] = [
+  { q: 1, r: 0 },
+  { q: -1, r: 0 },
+  { q: 0, r: 1 },
+  { q: 0, r: -1 },
+  { q: 1, r: -1 },
+  { q: -1, r: 1 },
+];
+
+/** Unoccupied hexes adjacent to at least one occupied cell, where a new tile could go. */
+export function getEmptySlots(cells: AxialCoord[]): AxialCoord[] {
+  const occupied = new Set(cells.map(({ q, r }) => `${q},${r}`));
+  const empty = new Map<string, AxialCoord>();
+  for (const cell of cells) {
+    for (const dir of NEIGHBOR_DIRECTIONS) {
+      const neighbor = { q: cell.q + dir.q, r: cell.r + dir.r };
+      const key = `${neighbor.q},${neighbor.r}`;
+      if (!occupied.has(key)) {
+        empty.set(key, neighbor);
+      }
+    }
+  }
+  return Array.from(empty.values());
 }
 
 export function axialToPosition({ q, r }: AxialCoord): Vector3 {
@@ -43,9 +69,14 @@ export interface HexGridCell extends AxialCoord {
 export interface HexGridProps {
   cells: HexGridCell[];
   tileSize?: number;
+  showEmptySlots?: boolean;
 }
 
-export function HexGrid({ cells, tileSize = 1 }: HexGridProps) {
+export function HexGrid({
+  cells,
+  tileSize = 1,
+  showEmptySlots = false,
+}: HexGridProps) {
   return (
     <>
       {cells.map(({ q, r, Tile, rotationStep = 0 }, index) => (
@@ -55,6 +86,14 @@ export function HexGrid({ cells, tileSize = 1 }: HexGridProps) {
           rotation={rotationStepToRadians(rotationStep)}
         />
       ))}
+      {showEmptySlots &&
+        getEmptySlots(cells).map(({ q, r }) => (
+          <EmptyTileSlot
+            key={`${q},${r}`}
+            position={axialToPosition({ q, r }).multiplyScalar(tileSize)}
+            rotation={rotationStepToRadians(0)}
+          />
+        ))}
     </>
   );
 }

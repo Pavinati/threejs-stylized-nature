@@ -9,6 +9,7 @@ import Bushes from "./tiles/Bushes.tsx";
 import Mushrooms from "./tiles/Mushrooms.tsx";
 import Stumps from "./tiles/Stumps.tsx";
 import Logs from "./tiles/Logs.tsx";
+import Flowers from "./tiles/Flowers.tsx";
 
 const SCENE_LAYOUT: HexGridCell[] = [
   { q: 0, r: 0, Tile: Trees },
@@ -17,6 +18,7 @@ const SCENE_LAYOUT: HexGridCell[] = [
   { q: 1, r: -1, Tile: Logs },
   { q: 0, r: -1, Tile: Mushrooms },
   { q: -1, r: 0, Tile: Stumps },
+  { q: -1, r: 1, Tile: Flowers },
 ];
 
 function App() {

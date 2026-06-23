@@ -88,7 +88,7 @@ function App() {
     >
       <color attach="background" args={["#808080"]} />
       <OrthographicCamera makeDefault position={[0, 5, 5]} zoom={100} />
-      <OrbitControls />
+      <OrbitControls maxPolarAngle={Math.PI / 2} />
       <ambientLight intensity={0.5} />
       <directionalLight
         position={[2.3, 8.15, 3.6]}

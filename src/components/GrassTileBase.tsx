@@ -6,7 +6,7 @@ export function GrassTileBase() {
         <meshStandardMaterial color={"#85e385"} />
       </mesh>
       <mesh position={[0, -0.15, 0]} name="soil">
-        <cylinderGeometry args={[2, 2, 0.1, 6]} />
+        <cylinderGeometry args={[2, 2, 0.1, 6, 1, true]} />
         <meshStandardMaterial color={"brown"} />
       </mesh>
     </group>

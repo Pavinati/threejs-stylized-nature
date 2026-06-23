@@ -7,7 +7,7 @@ const HEX_SEGMENTS = 6;
 const OUTLINE_POINTS: [number, number, number][] = Array.from(
   { length: HEX_SEGMENTS + 1 },
   (_, i) => {
-    const theta = (i / HEX_SEGMENTS) * Math.PI * 2;
+    const theta = (i / HEX_SEGMENTS) * Math.PI * 2 + Math.PI / 6;
     return [HEX_RADIUS * Math.sin(theta), 0, HEX_RADIUS * Math.cos(theta)];
   },
 );
@@ -21,7 +21,7 @@ interface EmptyTileSlotProps {
 export function EmptyTileSlot({ position, rotation }: EmptyTileSlotProps) {
   return (
     <group position={position} rotation={rotation} name="empty-tile-slot">
-      <mesh position={[0, -0.05, 0]}>
+      <mesh position={[0, -0.05, 0]} rotation={[0, Math.PI / 6, 0]}>
         <cylinderGeometry args={[HEX_RADIUS, HEX_RADIUS, 0.02, HEX_SEGMENTS]} />
         <meshBasicMaterial color="#ffffff" transparent opacity={0.08} />
       </mesh>

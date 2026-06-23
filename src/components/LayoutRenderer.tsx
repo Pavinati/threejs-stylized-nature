@@ -7,7 +7,7 @@ import type { AxialCoord } from "../utilities/HexCoords.ts";
 import type { LayoutSlot } from "../utilities/HexLayout.ts";
 
 function rotationStepToRadians(step: number): Euler {
-  const yAxysRotation = step * (Math.PI / 3) + Math.PI / 6;
+  const yAxysRotation = step * (Math.PI / 3);
   return new Euler(0, yAxysRotation, 0);
 }
 

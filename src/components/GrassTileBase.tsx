@@ -1,6 +1,6 @@
 export function GrassTileBase() {
   return (
-    <group name="grass-tile-base">
+    <group rotation={[0, Math.PI / 6, 0]} name="grass-tile-base">
       <mesh position={[0, -0.05, 0]} receiveShadow name="grass">
         <cylinderGeometry args={[2, 2, 0.1, 6]} />
         <meshStandardMaterial color={"#85e385"} />

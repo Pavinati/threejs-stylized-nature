@@ -87,35 +87,37 @@ function App() {
       shadows={{ enabled: true, type: PCFShadowMap }}
     >
       <color attach="background" args={["#808080"]} />
-      <OrthographicCamera makeDefault position={[0, 5, 5]} zoom={100} />
-      <OrbitControls maxPolarAngle={Math.PI / 2} />
-      <ambientLight intensity={0.5} />
-      <directionalLight
-        position={[2.3, 8.15, 3.6]}
-        intensity={1}
-        castShadow
-        shadow-mapSize={[1024, 1024]}
-        shadow-bias={shadowBias}
-      >
-        <orthographicCamera
-          attach="shadow-camera"
-          near={3}
-          far={13}
-          left={-5}
-          right={5}
-          top={5}
-          bottom={-5}
+      <ThreeJSInstances>
+        <OrthographicCamera makeDefault position={[0, 5, 5]} zoom={100} />
+        <OrbitControls maxPolarAngle={Math.PI / 2} />
+        <ambientLight intensity={0.5} />
+        <directionalLight
+          position={[2.3, 8.15, 3.6]}
+          intensity={1}
+          castShadow
+          shadow-mapSize={[1024, 1024]}
+          shadow-bias={shadowBias}
         >
-          {showLightHelper && <Helper type={CameraHelper} />}
-        </orthographicCamera>
-      </directionalLight>
-      <LayoutRenderer
-        slots={layout.slots()}
-        emptySlots={layout.emptySlots()}
-        showEmptySlots
-        hoveredSlot={hoveredSlot}
-        selectedSlot={selectedSlot}
-      />
+          <orthographicCamera
+            attach="shadow-camera"
+            near={3}
+            far={13}
+            left={-5}
+            right={5}
+            top={5}
+            bottom={-5}
+          >
+            {showLightHelper && <Helper type={CameraHelper} />}
+          </orthographicCamera>
+        </directionalLight>
+        <LayoutRenderer
+          slots={layout.slots()}
+          emptySlots={layout.emptySlots()}
+          showEmptySlots
+          hoveredSlot={hoveredSlot}
+          selectedSlot={selectedSlot}
+        />
+      </ThreeJSInstances>
       <PointerSlotTracker
         validSlots={layout.validSlots()}
         onHoverSlot={setHoveredSlot}

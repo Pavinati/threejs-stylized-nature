@@ -1,16 +1,10 @@
-import { HEX_SIZE } from "../utilities/HexCoords";
+import { GrassHexagon, SoilHexagon } from "../ThreeJSInstances";
 
 export function GrassTileBase() {
   return (
     <group rotation={[0, Math.PI / 6, 0]} name="grass-tile-base">
-      <mesh position={[0, -0.05, 0]} receiveShadow name="grass">
-        <cylinderGeometry args={[HEX_SIZE, HEX_SIZE, 0.1, 6]} />
-        <meshStandardMaterial color={"#85e385"} />
-      </mesh>
-      <mesh position={[0, -0.15, 0]} name="soil">
-        <cylinderGeometry args={[HEX_SIZE, HEX_SIZE, 0.1, 6, 1, true]} />
-        <meshStandardMaterial color={"brown"} />
-      </mesh>
+      <GrassHexagon position={[0, -0.05, 0]} name="grass" />
+      <SoilHexagon position={[0, -0.15, 0]} name="soil" />
     </group>
   );
 }

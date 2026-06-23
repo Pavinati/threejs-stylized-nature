@@ -1,5 +1,6 @@
 import { Euler, Vector3 } from "three";
 import { Line } from "@react-three/drei";
+import { GreyHexagon } from "../ThreeJSInstances";
 import { HEX_SIZE } from "../utilities/HexCoords";
 
 const OUTLINE_POINTS: [number, number, number][] = Array.from(
@@ -19,10 +20,7 @@ interface EmptyTileSlotProps {
 export function EmptyTileSlot({ position, rotation }: EmptyTileSlotProps) {
   return (
     <group position={position} rotation={rotation} name="empty-tile-slot">
-      <mesh position={[0, -0.05, 0]} rotation={[0, Math.PI / 6, 0]}>
-        <cylinderGeometry args={[HEX_SIZE, HEX_SIZE, 0.02, 6]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.08} />
-      </mesh>
+      <GreyHexagon position={[0, -0.05, 0]} rotation={[0, Math.PI / 6, 0]} />
       <Line
         points={OUTLINE_POINTS}
         color="#ffffff"

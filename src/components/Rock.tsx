@@ -1,4 +1,5 @@
 import type { Euler, Vector3 } from "three";
+import { Rock as RockInstance } from "../ThreeJSInstances";
 
 export interface RockProps {
   name?: string;
@@ -14,16 +15,11 @@ export function Rock({
   scale = 1,
 }: RockProps) {
   return (
-    <mesh
+    <RockInstance
       position={position}
       rotation={rotation}
       scale={scale}
-      castShadow
-      receiveShadow
       name={name}
-    >
-      <dodecahedronGeometry args={[1, 0]} />
-      <meshStandardMaterial color={"#8a8a8a"} />
-    </mesh>
+    />
   );
 }

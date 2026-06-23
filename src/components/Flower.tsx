@@ -1,4 +1,5 @@
 import type { Euler, Vector3 } from "three";
+import { Stem, Bloom, Petal } from "../ThreeJSInstances";
 
 export interface FlowerProps {
   position?: Vector3;
@@ -18,43 +19,25 @@ export function Flower({
 }: FlowerProps) {
   return (
     <group position={position} rotation={rotation} scale={scale} name="flower">
-      <mesh position={[0, 0.06, 0]} castShadow receiveShadow name="stem-lower">
-        <cylinderGeometry args={[0.014, 0.017, 0.12, 6]} />
-        <meshStandardMaterial color={"#5fb85f"} />
-      </mesh>
+      <Stem position={[0, 0.06, 0]} name="stem-lower" />
       <group position={[0, 0.12, 0]} rotation={[0, 0, STEM_BEND]}>
-        <mesh
-          position={[0, 0.05, 0]}
-          castShadow
-          receiveShadow
-          name="stem-upper"
-        >
-          <cylinderGeometry args={[0.011, 0.014, 0.1, 6]} />
-          <meshStandardMaterial color={"#5fb85f"} />
-        </mesh>
+        <Stem position={[0, 0.05, 0]} scale={0.9} name="stem-upper" />
         <group position={[0, 0.11, 0]} name="bloom">
           {Array.from({ length: PETAL_COUNT }).map((_, i) => {
             const angle = (i / PETAL_COUNT) * Math.PI * 2;
             return (
               <group key={i} rotation={[0, angle, 0]}>
-                <mesh
+                <Petal
                   position={[0.045, 0.01, 0]}
                   rotation={[0, 0, Math.PI / 6]}
                   scale={[1.6, 0.45, 0.85]}
-                  castShadow
-                  receiveShadow
                   name="petal"
-                >
-                  <sphereGeometry args={[0.04, 8, 6]} />
-                  <meshStandardMaterial color={color} />
-                </mesh>
+                  color={color}
+                />
               </group>
             );
           })}
-          <mesh position={[0, 0.02, 0]} castShadow receiveShadow name="center">
-            <sphereGeometry args={[0.028, 8, 8]} />
-            <meshStandardMaterial color={"#f2c14e"} />
-          </mesh>
+          <Bloom position={[0, 0.02, 0]} name="center" />
         </group>
       </group>
     </group>

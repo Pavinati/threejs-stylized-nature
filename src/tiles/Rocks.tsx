@@ -11,7 +11,7 @@ interface RockArgs {
   boulderScale: number;
   pebblePosition: Vector3;
   pebbleScale: number;
-  rotation: number;
+  rotation: Euler;
 }
 
 interface RocksProps {
@@ -45,7 +45,7 @@ export default function Rocks({ position, rotation }: RocksProps) {
         boulderScale,
         pebblePosition,
         pebbleScale: boulderScale * 0.4,
-        rotation: Math.random() * Math.PI * 2,
+        rotation: new Euler(0, Math.random() * Math.PI * 2, 0),
       });
     }
     return randomizedArgs;
@@ -69,12 +69,12 @@ export default function Rocks({ position, rotation }: RocksProps) {
             <Rock
               position={boulderPosition}
               scale={boulderScale}
-              rotation={[0, rotation, 0]}
+              rotation={rotation}
               name="boulder"
             />
             <Rock
               position={pebblePosition}
-              rotation={[0, rotation, 0]}
+              rotation={rotation}
               scale={pebbleScale}
               name="pebble"
             />

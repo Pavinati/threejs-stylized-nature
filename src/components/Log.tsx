@@ -1,16 +1,12 @@
 import type { Euler, Vector3 } from "three";
 
 export interface LogProps {
-  position?: number | Vector3 | [x: number, y: number, z: number];
-  rotation?: number | Euler | [x: number, y: number, z: number];
+  position?: Vector3;
+  rotation?: Euler;
   scale?: number;
 }
 
-export function Log({
-  position = [0, 0, 0],
-  rotation = [0, 0, 0],
-  scale = 1,
-}: LogProps) {
+export function Log({ position, rotation, scale = 1 }: LogProps) {
   return (
     <group position={position} rotation={rotation} scale={scale} name="log">
       <mesh

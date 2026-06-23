@@ -9,7 +9,7 @@ const FLOWER_COLORS = ["#e85d9e", "#f2c14e", "#8e6fe0", "#f25c5c"];
 
 interface FlowerArgs {
   position: Vector3;
-  rotation: number;
+  rotation: Euler;
   color: string;
   scale: number;
 }
@@ -28,7 +28,7 @@ export default function Flowers({ position, rotation }: FlowersProps) {
       const r = Math.sqrt(Math.random()) * FLOWER_POSITION_RANGE;
       args.push({
         position: new Vector3(Math.cos(theta) * r, 0, Math.sin(theta) * r),
-        rotation: Math.random() * Math.PI * 2,
+        rotation: new Euler(0, Math.random() * Math.PI * 2, 0),
         color: FLOWER_COLORS[Math.floor(Math.random() * FLOWER_COLORS.length)],
         scale: 0.8 + Math.random() * 0.5,
       });

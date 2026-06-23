@@ -8,7 +8,7 @@ const LOG_POSITION_RANGE = 1.3;
 
 interface LogArgs {
   position: Vector3;
-  rotation: number;
+  rotation: Euler;
 }
 
 interface LogsProps {
@@ -23,7 +23,7 @@ export default function Logs({ position, rotation }: LogsProps) {
       const sliceAngle = (2 * Math.PI) / LOG_COUNT;
       const theta = (i + Math.random()) * sliceAngle;
       const r = Math.sqrt(Math.random()) * LOG_POSITION_RANGE;
-      const rotation = Math.random() * Math.PI * 2;
+      const rotation = new Euler(0, Math.random() * Math.PI * 2, 0);
       const groupX = Math.cos(theta) * r;
       const groupZ = Math.sin(theta) * r;
       args.push({
@@ -38,7 +38,7 @@ export default function Logs({ position, rotation }: LogsProps) {
     <group position={position} rotation={rotation} name="logs">
       <GrassTileBase />
       {logArgs.map(({ position, rotation }, index) => (
-        <Log key={index} position={position} rotation={[0, rotation, 0]} />
+        <Log key={index} position={position} rotation={rotation} />
       ))}
     </group>
   );

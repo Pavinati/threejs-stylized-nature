@@ -2,15 +2,15 @@ import type { Euler, Vector3 } from "three";
 
 export interface RockProps {
   name?: string;
-  position?: number | Vector3 | [x: number, y: number, z: number];
-  rotation?: number | Euler | [x: number, y: number, z: number];
+  position?: Vector3;
+  rotation?: Euler;
   scale?: number;
 }
 
 export function Rock({
   name = "rock",
-  position = [0, 0, 0],
-  rotation = [0, 0, 0],
+  position,
+  rotation,
   scale = 1,
 }: RockProps) {
   return (

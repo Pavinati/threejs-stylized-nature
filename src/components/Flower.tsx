@@ -1,8 +1,8 @@
-import type { Vector3 } from "three";
+import type { Euler, Vector3 } from "three";
 
 export interface FlowerProps {
-  position?: number | Vector3 | [x: number, y: number, z: number];
-  rotation?: number;
+  position?: Vector3;
+  rotation?: Euler;
   color?: string;
   scale?: number;
 }
@@ -11,18 +11,13 @@ const PETAL_COUNT = 6;
 const STEM_BEND = Math.PI / 10;
 
 export function Flower({
-  position = [0, 0, 0],
-  rotation = 0,
+  position,
+  rotation,
   color = "#e85d9e",
   scale = 1,
 }: FlowerProps) {
   return (
-    <group
-      position={position}
-      rotation={[0, rotation, 0]}
-      scale={scale}
-      name="flower"
-    >
+    <group position={position} rotation={rotation} scale={scale} name="flower">
       <mesh position={[0, 0.06, 0]} castShadow receiveShadow name="stem-lower">
         <cylinderGeometry args={[0.014, 0.017, 0.12, 6]} />
         <meshStandardMaterial color={"#5fb85f"} />

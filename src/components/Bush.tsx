@@ -1,8 +1,8 @@
 import type { Euler, Vector3 } from "three";
 
 export interface BushProps {
-  position?: number | Vector3 | [x: number, y: number, z: number];
-  rotation?: number | Euler | [x: number, y: number, z: number];
+  position?: Vector3;
+  rotation?: Euler;
   scale?: number;
 }
 

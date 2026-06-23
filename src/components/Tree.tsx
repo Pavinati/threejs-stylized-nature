@@ -1,10 +1,10 @@
 import type { Vector3 } from "three";
 
 export interface TreeProps {
-  position?: number | Vector3 | [x: number, y: number, z: number];
+  position?: Vector3;
 }
 
-export function Tree({ position = [0, 0, 0] }: TreeProps) {
+export function Tree({ position }: TreeProps) {
   return (
     <group position={position} name="tree">
       <mesh position={[0, 0.1, 0]} castShadow receiveShadow name="trunk">

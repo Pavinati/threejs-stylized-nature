@@ -1,11 +1,11 @@
 import type { Vector3 } from "three";
 
 export interface MushroomProps {
-  position?: number | Vector3 | [x: number, y: number, z: number];
+  position?: Vector3;
   scale?: number;
 }
 
-export function Mushroom({ position = [0, 0, 0], scale = 1 }: MushroomProps) {
+export function Mushroom({ position, scale = 1 }: MushroomProps) {
   return (
     <group position={position} scale={scale} name="mushroom">
       <mesh position={[0, 0.08, 0]} castShadow receiveShadow name="stem">

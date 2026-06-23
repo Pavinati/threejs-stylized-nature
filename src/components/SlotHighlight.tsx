@@ -1,18 +1,17 @@
 import { Vector3 } from "three";
 import { Line } from "@react-three/drei";
+import { HEX_SIZE } from "../utilities/HexCoords";
 
-const HEX_RADIUS = 2;
-const HEX_SEGMENTS = 6;
 const RING_HEIGHT = 0.06;
 
 const OUTLINE_POINTS: [number, number, number][] = Array.from(
-  { length: HEX_SEGMENTS + 1 },
+  { length: 6 + 1 },
   (_, i) => {
-    const theta = (i / HEX_SEGMENTS) * Math.PI * 2 + Math.PI / 6; // rotate so its flat on top
+    const theta = (i / 6) * Math.PI * 2 + Math.PI / 6; // rotate so its flat on top
     return [
-      HEX_RADIUS * Math.sin(theta),
+      HEX_SIZE * Math.sin(theta),
       RING_HEIGHT,
-      HEX_RADIUS * Math.cos(theta),
+      HEX_SIZE * Math.cos(theta),
     ];
   },
 );

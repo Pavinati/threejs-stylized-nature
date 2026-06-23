@@ -16,8 +16,6 @@ import Stumps from "./tiles/Stumps.tsx";
 import Logs from "./tiles/Logs.tsx";
 import Flowers from "./tiles/Flowers.tsx";
 
-const TILE_SIZE = 2;
-
 const INITIAL_LAYOUT: LayoutSlot[] = [
   { position: { q: 0, r: 0 }, Tile: Trees },
   { position: { q: 1, r: 0 }, Tile: Rocks },
@@ -112,13 +110,11 @@ function App() {
       <LayoutRenderer
         slots={layout.slots()}
         emptySlots={layout.emptySlots()}
-        tileSize={TILE_SIZE}
         showEmptySlots
         hoveredSlot={hoveredSlot}
         selectedSlot={selectedSlot}
       />
       <PointerSlotTracker
-        tileSize={TILE_SIZE}
         validSlots={layout.validSlots()}
         onHoverSlot={setHoveredSlot}
         onSelectSlot={setSelectedSlot}

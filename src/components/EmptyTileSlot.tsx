@@ -1,14 +1,12 @@
 import { Euler, Vector3 } from "three";
 import { Line } from "@react-three/drei";
-
-const HEX_RADIUS = 2;
-const HEX_SEGMENTS = 6;
+import { HEX_SIZE } from "../utilities/HexCoords";
 
 const OUTLINE_POINTS: [number, number, number][] = Array.from(
-  { length: HEX_SEGMENTS + 1 },
+  { length: 6 + 1 },
   (_, i) => {
-    const theta = (i / HEX_SEGMENTS) * Math.PI * 2 + Math.PI / 6;
-    return [HEX_RADIUS * Math.sin(theta), 0, HEX_RADIUS * Math.cos(theta)];
+    const theta = (i / 6) * Math.PI * 2 + Math.PI / 6;
+    return [HEX_SIZE * Math.sin(theta), 0, HEX_SIZE * Math.cos(theta)];
   },
 );
 
@@ -22,7 +20,7 @@ export function EmptyTileSlot({ position, rotation }: EmptyTileSlotProps) {
   return (
     <group position={position} rotation={rotation} name="empty-tile-slot">
       <mesh position={[0, -0.05, 0]} rotation={[0, Math.PI / 6, 0]}>
-        <cylinderGeometry args={[HEX_RADIUS, HEX_RADIUS, 0.02, HEX_SEGMENTS]} />
+        <cylinderGeometry args={[HEX_SIZE, HEX_SIZE, 0.02, 6]} />
         <meshBasicMaterial color="#ffffff" transparent opacity={0.08} />
       </mesh>
       <Line

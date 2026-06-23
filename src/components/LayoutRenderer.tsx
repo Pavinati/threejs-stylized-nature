@@ -14,7 +14,6 @@ function rotationStepToRadians(step: number): Euler {
 export interface LayoutRendererProps {
   slots: LayoutSlot[];
   emptySlots: AxialCoord[];
-  tileSize?: number;
   showEmptySlots?: boolean;
   hoveredSlot?: AxialCoord | null;
   selectedSlot?: AxialCoord | null;
@@ -23,7 +22,6 @@ export interface LayoutRendererProps {
 export function LayoutRenderer({
   slots,
   emptySlots,
-  tileSize = 1,
   hoveredSlot = null,
   selectedSlot = null,
 }: LayoutRendererProps) {
@@ -32,27 +30,27 @@ export function LayoutRenderer({
       {slots.map(({ position, Tile, rotationStep = 0 }) => (
         <Tile
           key={slotKey(position)}
-          position={axialToVector3(position, tileSize)}
+          position={axialToVector3(position)}
           rotation={rotationStepToRadians(rotationStep)}
         />
       ))}
       {emptySlots.map((p) => (
         <EmptyTileSlot
           key={slotKey(p)}
-          position={axialToVector3(p, tileSize)}
+          position={axialToVector3(p)}
           rotation={rotationStepToRadians(0)}
         />
       ))}
       {hoveredSlot &&
         (!selectedSlot || slotKey(hoveredSlot) !== slotKey(selectedSlot)) && (
           <SlotHighlight
-            position={axialToVector3(hoveredSlot, tileSize)}
+            position={axialToVector3(hoveredSlot)}
             variant="hover"
           />
         )}
       {selectedSlot && (
         <SlotHighlight
-          position={axialToVector3(selectedSlot, tileSize)}
+          position={axialToVector3(selectedSlot)}
           variant="selected"
         />
       )}

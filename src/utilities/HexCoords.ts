@@ -17,6 +17,8 @@
 // see more at: https://www.redblobgames.com/grids/hexagons/
 import { Vector3 } from "three";
 
+export const HEX_SIZE = 2;
+
 export interface AxialCoord {
   q: number;
   r: number;
@@ -37,15 +39,15 @@ export const NEIGHBOR_DIRECTIONS: AxialCoord[] = [
   { q: -1, r: 1 },
 ];
 
-export function axialToVector3({ q, r }: AxialCoord, tileSize = 1): Vector3 {
+export function axialToVector3({ q, r }: AxialCoord): Vector3 {
   const x = (3 / 2) * q;
   const z = Math.sqrt(3) * (q / 2 + r);
-  return new Vector3(x, 0, z).multiplyScalar(tileSize);
+  return new Vector3(x, 0, z).multiplyScalar(HEX_SIZE);
 }
 
-export function vector3ToAxial(position: Vector3, tileSize = 1): AxialCoord {
-  const q = (2 * position.x) / (3 * tileSize);
-  const r = position.z / (Math.sqrt(3) * tileSize) - q / 2;
+export function vector3ToAxial(position: Vector3): AxialCoord {
+  const q = (2 * position.x) / (3 * HEX_SIZE);
+  const r = position.z / (Math.sqrt(3) * HEX_SIZE) - q / 2;
 
   /** the quickest way to round axial coordinates is to use cube coordinates
       and then convert them back to axial */

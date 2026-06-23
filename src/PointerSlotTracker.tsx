@@ -7,7 +7,6 @@ import type { AxialCoord } from "./utilities/HexCoords.ts";
 const GROUND_PLANE = new Plane(new Vector3(0, 1, 0), 0);
 
 export interface PointerSlotTrackerProps {
-  tileSize?: number;
   validSlots: AxialCoord[];
   onHoverSlot: (slot: AxialCoord | null) => void;
   onSelectSlot: (slot: AxialCoord | null) => void;
@@ -20,7 +19,6 @@ export interface PointerSlotTrackerProps {
  * (a tile, an empty spot, or neither) without raycasting against meshes.
  */
 export function PointerSlotTracker({
-  tileSize = 1,
   validSlots,
   onHoverSlot,
   onSelectSlot,
@@ -44,7 +42,7 @@ export function PointerSlotTracker({
       }
       return;
     }
-    const hitSlot = vector3ToAxial(hit, tileSize);
+    const hitSlot = vector3ToAxial(hit);
     const slot = validSlots.find((s) => hitSlot.q === s.q && hitSlot.r === s.r);
     if (!slot) {
       // pointer is not over a valid slot

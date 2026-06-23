@@ -22,6 +22,12 @@ export interface AxialCoord {
   r: number;
 }
 
+interface CubeCoord {
+  q: number;
+  r: number;
+  s: number;
+}
+
 export const NEIGHBOR_DIRECTIONS: AxialCoord[] = [
   { q: 1, r: 0 },
   { q: -1, r: 0 },
@@ -35,4 +41,36 @@ export function axialToVector3({ q, r }: AxialCoord, tileSize = 1): Vector3 {
   const x = (3 / 2) * q;
   const z = Math.sqrt(3) * (q / 2 + r);
   return new Vector3(x, 0, z).multiplyScalar(tileSize);
+}
+
+export function vector3ToAxial(position: Vector3, tileSize = 1): AxialCoord {
+  const q = (2 * position.x) / (3 * tileSize);
+  const r = position.z / (Math.sqrt(3) * tileSize) - q / 2;
+
+  /** the quickest way to round axial coordinates is to use cube coordinates
+      and then convert them back to axial */
+  const s = -q - r;
+  const cubeCoords = cubeRound({ q, r, s });
+  return { q: cubeCoords.q, r: cubeCoords.r };
+}
+
+/** Rounds fractional cube coordinates to the nearest hex */
+function cubeRound(frac: CubeCoord): CubeCoord {
+  let q = Math.round(frac.q);
+  let r = Math.round(frac.r);
+  let s = Math.round(frac.s);
+
+  const dq = Math.abs(q - frac.q);
+  const dr = Math.abs(r - frac.r);
+  const ds = Math.abs(s - frac.s);
+
+  if (dq > dr && dq > ds) {
+    q = -r - s;
+  } else if (dr > ds) {
+    r = -q - s;
+  } else {
+    s = -q - r;
+  }
+
+  return { q, r, s };
 }

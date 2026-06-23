@@ -6,6 +6,7 @@ import { useControls } from "leva";
 import { HexLayout } from "./utilities/HexLayout.ts";
 import type { AxialCoord } from "./utilities/HexCoords.ts";
 import type { LayoutSlot } from "./utilities/HexLayout.ts";
+import { PointerSlotTracker } from "./PointerSlotTracker.tsx";
 import { LayoutRenderer } from "./components/LayoutRenderer.tsx";
 import Trees from "./tiles/Trees.tsx";
 import Rocks from "./tiles/Rocks.tsx";
@@ -27,12 +28,42 @@ const INITIAL_LAYOUT: LayoutSlot[] = [
   { position: { q: -1, r: 1 }, Tile: Flowers },
 ];
 
+const AVAILABLE_TILES = [
+  Trees,
+  Rocks,
+  Bushes,
+  Logs,
+  Mushrooms,
+  Stumps,
+  Flowers,
+];
+
 function App() {
   const [layout, setLayout] = useState(new HexLayout());
+  const [hoveredSlot, setHoveredSlot] = useState<AxialCoord | null>(null);
+  const [selectedSlot, setSelectedSlot] = useState<AxialCoord | null>(null);
 
   useEffect(() => {
     setLayout((l) => l.init(INITIAL_LAYOUT));
   }, []);
+
+  const handleDoubleClick = useCallback(
+    (slot: AxialCoord | null) => {
+      if (!slot) {
+        return;
+      }
+      if (layout.isSlotOccupied(slot)) {
+        setHoveredSlot(null);
+        setSelectedSlot(null);
+        setLayout((l) => l.removeTile(slot));
+      } else {
+        const randIdx = Math.floor(Math.random() * AVAILABLE_TILES.length);
+        const randomTile = AVAILABLE_TILES[randIdx];
+        setLayout((l) => l.addTile(randomTile, slot));
+      }
+    },
+    [layout],
+  );
 
   // Debug
   const { showLightHelper, shadowBias } = useControls({
@@ -83,6 +114,15 @@ function App() {
         emptySlots={layout.emptySlots()}
         tileSize={TILE_SIZE}
         showEmptySlots
+        hoveredSlot={hoveredSlot}
+        selectedSlot={selectedSlot}
+      />
+      <PointerSlotTracker
+        tileSize={TILE_SIZE}
+        validSlots={layout.validSlots()}
+        onHoverSlot={setHoveredSlot}
+        onSelectSlot={setSelectedSlot}
+        onRemoveTile={handleDoubleClick}
       />
     </Canvas>
   );

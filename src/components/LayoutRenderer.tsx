@@ -1,5 +1,6 @@
 import { Euler } from "three";
 import { EmptyTileSlot } from "./EmptyTileSlot.tsx";
+import { SlotHighlight } from "./SlotHighlight.tsx";
 import { axialToVector3 } from "../utilities/HexCoords.ts";
 import { slotKey } from "../utilities/HexLayout.ts";
 import type { AxialCoord } from "../utilities/HexCoords.ts";
@@ -15,12 +16,16 @@ export interface LayoutRendererProps {
   emptySlots: AxialCoord[];
   tileSize?: number;
   showEmptySlots?: boolean;
+  hoveredSlot?: AxialCoord | null;
+  selectedSlot?: AxialCoord | null;
 }
 
 export function LayoutRenderer({
   slots,
   emptySlots,
   tileSize = 1,
+  hoveredSlot = null,
+  selectedSlot = null,
 }: LayoutRendererProps) {
   return (
     <>
@@ -38,6 +43,19 @@ export function LayoutRenderer({
           rotation={rotationStepToRadians(0)}
         />
       ))}
+      {hoveredSlot &&
+        (!selectedSlot || slotKey(hoveredSlot) !== slotKey(selectedSlot)) && (
+          <SlotHighlight
+            position={axialToVector3(hoveredSlot, tileSize)}
+            variant="hover"
+          />
+        )}
+      {selectedSlot && (
+        <SlotHighlight
+          position={axialToVector3(selectedSlot, tileSize)}
+          variant="selected"
+        />
+      )}
     </>
   );
 }

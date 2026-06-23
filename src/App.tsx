@@ -1,8 +1,12 @@
+import { useCallback, useEffect, useState } from "react";
 import { CameraHelper, PCFShadowMap } from "three";
 import { Canvas } from "@react-three/fiber";
 import { Helper, OrbitControls, OrthographicCamera } from "@react-three/drei";
 import { useControls } from "leva";
-import { HexGrid, type HexGridCell } from "./HexGrid.tsx";
+import { HexLayout } from "./utilities/HexLayout.ts";
+import type { AxialCoord } from "./utilities/HexCoords.ts";
+import type { LayoutSlot } from "./utilities/HexLayout.ts";
+import { LayoutRenderer } from "./components/LayoutRenderer.tsx";
 import Trees from "./tiles/Trees.tsx";
 import Rocks from "./tiles/Rocks.tsx";
 import Bushes from "./tiles/Bushes.tsx";
@@ -11,17 +15,26 @@ import Stumps from "./tiles/Stumps.tsx";
 import Logs from "./tiles/Logs.tsx";
 import Flowers from "./tiles/Flowers.tsx";
 
-const SCENE_LAYOUT: HexGridCell[] = [
-  { q: 0, r: 0, Tile: Trees },
-  { q: 1, r: 0, Tile: Rocks },
-  { q: 0, r: 1, Tile: Bushes },
-  { q: 1, r: -1, Tile: Logs },
-  { q: 0, r: -1, Tile: Mushrooms },
-  { q: -1, r: 0, Tile: Stumps },
-  { q: -1, r: 1, Tile: Flowers },
+const TILE_SIZE = 2;
+
+const INITIAL_LAYOUT: LayoutSlot[] = [
+  { position: { q: 0, r: 0 }, Tile: Trees },
+  { position: { q: 1, r: 0 }, Tile: Rocks },
+  { position: { q: 0, r: 1 }, Tile: Bushes },
+  { position: { q: 1, r: -1 }, Tile: Logs },
+  { position: { q: 0, r: -1 }, Tile: Mushrooms },
+  { position: { q: -1, r: 0 }, Tile: Stumps },
+  { position: { q: -1, r: 1 }, Tile: Flowers },
 ];
 
 function App() {
+  const [layout, setLayout] = useState(new HexLayout());
+
+  useEffect(() => {
+    setLayout((l) => l.init(INITIAL_LAYOUT));
+  }, []);
+
+  // Debug
   const { showLightHelper, shadowBias } = useControls({
     showLightHelper: {
       value: false,
@@ -65,7 +78,12 @@ function App() {
           {showLightHelper && <Helper type={CameraHelper} />}
         </orthographicCamera>
       </directionalLight>
-      <HexGrid cells={SCENE_LAYOUT} tileSize={2} showEmptySlots />
+      <LayoutRenderer
+        slots={layout.slots()}
+        emptySlots={layout.emptySlots()}
+        tileSize={TILE_SIZE}
+        showEmptySlots
+      />
     </Canvas>
   );
 }

@@ -11,6 +11,8 @@ export interface PointerSlotTrackerProps {
   onHoverSlot: (slot: AxialCoord | null) => void;
   onSelectSlot: (slot: AxialCoord | null) => void;
   onRemoveTile: (slot: AxialCoord | null) => void;
+  /** Suspends hover/click/double-click handling, e.g. while the pointer is over a screen-space overlay. */
+  disabled?: boolean;
 }
 
 /**
@@ -23,12 +25,23 @@ export function PointerSlotTracker({
   onHoverSlot,
   onSelectSlot,
   onRemoveTile,
+  disabled = false,
 }: PointerSlotTrackerProps) {
   const { camera, pointer, gl } = useThree();
   const raycaster = useRef(new Raycaster());
   const hoveredSlot = useRef<AxialCoord | null>(null);
+  const disabledRef = useRef(disabled);
+
+  useEffect(() => {
+    disabledRef.current = disabled;
+    if (disabled && hoveredSlot.current) {
+      hoveredSlot.current = null;
+      onHoverSlot(null);
+    }
+  }, [disabled, onHoverSlot]);
 
   useFrame(() => {
+    if (disabledRef.current) return;
     raycaster.current.setFromCamera(pointer, camera);
     const hit = raycaster.current.ray.intersectPlane(
       GROUND_PLANE,
@@ -61,14 +74,20 @@ export function PointerSlotTracker({
 
   useEffect(() => {
     const canvas = gl.domElement;
-    const handleClick = () => onSelectSlot(hoveredSlot.current);
+    const handleClick = () => {
+      if (disabledRef.current) return;
+      onSelectSlot(hoveredSlot.current);
+    };
     canvas.addEventListener("click", handleClick);
     return () => canvas.removeEventListener("click", handleClick);
   }, [gl, onSelectSlot]);
 
   useEffect(() => {
     const canvas = gl.domElement;
-    const handleDoubleClick = () => onRemoveTile(hoveredSlot.current);
+    const handleDoubleClick = () => {
+      if (disabledRef.current) return;
+      onRemoveTile(hoveredSlot.current);
+    };
     canvas.addEventListener("dblclick", handleDoubleClick);
     return () => canvas.removeEventListener("dblclick", handleDoubleClick);
   }, [gl, onRemoveTile]);

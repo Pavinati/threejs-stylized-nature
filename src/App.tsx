@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { CameraHelper, PCFShadowMap } from "three";
 import { Canvas } from "@react-three/fiber";
 import { Helper, OrbitControls, OrthographicCamera } from "@react-three/drei";
@@ -6,7 +6,6 @@ import { useControls } from "leva";
 import { ThreeJSInstances } from "./ThreeJSInstances.tsx";
 import { HexLayout } from "./utilities/HexLayout.ts";
 import type { AxialCoord } from "./utilities/HexCoords.ts";
-import type { LayoutSlot } from "./utilities/HexLayout.ts";
 import { PointerSlotTracker } from "./PointerSlotTracker.tsx";
 import { LayoutRenderer } from "./components/LayoutRenderer.tsx";
 import { TileDeck } from "./components/TileDeck.tsx";
@@ -17,16 +16,6 @@ import Mushrooms from "./tiles/Mushrooms.tsx";
 import Stumps from "./tiles/Stumps.tsx";
 import Logs from "./tiles/Logs.tsx";
 import Flowers from "./tiles/Flowers.tsx";
-
-const INITIAL_LAYOUT: LayoutSlot[] = [
-  { position: { q: 0, r: 0 }, Tile: Trees },
-  { position: { q: 1, r: 0 }, Tile: Rocks },
-  { position: { q: 0, r: 1 }, Tile: Bushes },
-  { position: { q: 1, r: -1 }, Tile: Logs },
-  { position: { q: 0, r: -1 }, Tile: Mushrooms },
-  { position: { q: -1, r: 0 }, Tile: Stumps },
-  { position: { q: -1, r: 1 }, Tile: Flowers },
-];
 
 const AVAILABLE_TILES = [
   Trees,
@@ -42,10 +31,8 @@ function App() {
   const [layout, setLayout] = useState(new HexLayout());
   const [hoveredSlot, setHoveredSlot] = useState<AxialCoord | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<AxialCoord | null>(null);
-
-  useEffect(() => {
-    setLayout((l) => l.init(INITIAL_LAYOUT));
-  }, []);
+  const [isDeckHovered, setIsDeckHovered] = useState(false);
+  const [selectedTileIndex, setSelectedTileIndex] = useState<number | null>(0);
 
   const handleDoubleClick = useCallback(
     (slot: AxialCoord | null) => {
@@ -56,13 +43,12 @@ function App() {
         setHoveredSlot(null);
         setSelectedSlot(null);
         setLayout((l) => l.removeTile(slot));
-      } else {
-        const randIdx = Math.floor(Math.random() * AVAILABLE_TILES.length);
-        const randomTile = AVAILABLE_TILES[randIdx];
-        setLayout((l) => l.addTile(randomTile, slot));
+      } else if (selectedTileIndex !== null) {
+        const selectedTile = AVAILABLE_TILES[selectedTileIndex];
+        setLayout((l) => l.addTile(selectedTile, slot));
       }
     },
-    [layout],
+    [layout, selectedTileIndex],
   );
 
   // Debug
@@ -87,29 +73,34 @@ function App() {
       shadows={{ enabled: true, type: PCFShadowMap }}
     >
       <color attach="background" args={["#808080"]} />
-      <ThreeJSInstances>
-        <OrthographicCamera makeDefault position={[0, 5, 5]} zoom={100} />
-        <OrbitControls maxPolarAngle={Math.PI / 2} />
-        <ambientLight intensity={0.5} />
-        <directionalLight
-          position={[2.3, 8.15, 3.6]}
-          intensity={1}
-          castShadow
-          shadow-mapSize={[1024, 1024]}
-          shadow-bias={shadowBias}
+      <OrthographicCamera
+        makeDefault
+        position={[0, 5, 5]}
+        near={1}
+        zoom={100}
+      />
+      <OrbitControls maxPolarAngle={Math.PI / 2} enabled={!isDeckHovered} />
+      <ambientLight intensity={0.5} />
+      <directionalLight
+        position={[2.3, 8.15, 3.6]}
+        intensity={1}
+        castShadow
+        shadow-mapSize={[1024, 1024]}
+        shadow-bias={shadowBias}
+      >
+        <orthographicCamera
+          attach="shadow-camera"
+          near={3}
+          far={13}
+          left={-5}
+          right={5}
+          top={5}
+          bottom={-5}
         >
-          <orthographicCamera
-            attach="shadow-camera"
-            near={3}
-            far={13}
-            left={-5}
-            right={5}
-            top={5}
-            bottom={-5}
-          >
-            {showLightHelper && <Helper type={CameraHelper} />}
-          </orthographicCamera>
-        </directionalLight>
+          {showLightHelper && <Helper type={CameraHelper} />}
+        </orthographicCamera>
+      </directionalLight>
+      <ThreeJSInstances>
         <LayoutRenderer
           slots={layout.slots()}
           emptySlots={layout.emptySlots()}
@@ -117,12 +108,19 @@ function App() {
           hoveredSlot={hoveredSlot}
           selectedSlot={selectedSlot}
         />
+        <TileDeck
+          tiles={AVAILABLE_TILES}
+          onHoverChange={setIsDeckHovered}
+          selectedTileIndex={selectedTileIndex}
+          onTileSelect={setSelectedTileIndex}
+        />
       </ThreeJSInstances>
       <PointerSlotTracker
         validSlots={layout.validSlots()}
         onHoverSlot={setHoveredSlot}
         onSelectSlot={setSelectedSlot}
         onRemoveTile={handleDoubleClick}
+        disabled={isDeckHovered}
       />
     </Canvas>
   );

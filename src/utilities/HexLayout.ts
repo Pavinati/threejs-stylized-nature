@@ -7,7 +7,7 @@ import type { AxialCoord } from "./HexCoords.ts";
 
 const INITIAL_EMPTY_SLOT: AxialCoord = { q: 0, r: 0 };
 
-type Component = ComponentType<{ position?: Vector3; rotation?: Euler }>;
+export type Component = ComponentType<{ position?: Vector3; rotation?: Euler }>;
 
 export interface LayoutSlot {
   Tile: Component;

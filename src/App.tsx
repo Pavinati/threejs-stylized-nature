@@ -71,18 +71,45 @@ function App() {
   );
 
   // Debug
-  const { showLightHelper, shadowBias } = useControls({
+  const { near, far, zoom } = useControls("Camera", {
+    near: {
+      value: 0.1,
+      step: 0.1,
+      min: 0.1,
+      max: 10,
+    },
+    far: {
+      value: 50,
+      step: 0.1,
+      min: 1,
+      max: 50,
+    },
+    zoom: {
+      value: 100,
+      step: 0.1,
+      min: 0.1,
+      max: 1000,
+    },
+  });
+  const { showLightHelper, bias, cameraHSize } = useControls("Shadows", {
     showLightHelper: {
       value: false,
       name: "Show Light Helper",
     },
-    shadowBias: {
-      name: "Shadow Bias",
+    bias: {
+      name: "Bias",
       pad: 4,
       value: 0.003,
       step: 0.0001,
       min: 0,
       max: 0.01,
+    },
+    cameraHSize: {
+      name: "Camera half size",
+      value: 12,
+      step: 0.1,
+      min: 5,
+      max: 20,
     },
   });
 
@@ -95,8 +122,9 @@ function App() {
       <OrthographicCamera
         makeDefault
         position={[0, 5, 5]}
-        near={1}
-        zoom={100}
+        near={near}
+        far={far}
+        zoom={zoom}
       />
       <OrbitControls maxPolarAngle={Math.PI / 2} enabled={!isDeckHovered} />
       <ambientLight intensity={0.5} />
@@ -105,16 +133,16 @@ function App() {
         intensity={1}
         castShadow
         shadow-mapSize={[1024, 1024]}
-        shadow-bias={shadowBias}
+        shadow-bias={bias}
       >
         <orthographicCamera
           attach="shadow-camera"
           near={3}
           far={13}
-          left={-5}
-          right={5}
-          top={5}
-          bottom={-5}
+          left={-cameraHSize}
+          right={cameraHSize}
+          top={cameraHSize}
+          bottom={-cameraHSize}
         >
           {showLightHelper && <Helper type={CameraHelper} />}
         </orthographicCamera>

@@ -1,13 +1,15 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { CameraHelper, PCFShadowMap } from "three";
 import { Canvas } from "@react-three/fiber";
 import { Helper, OrbitControls, OrthographicCamera } from "@react-three/drei";
 import { useControls } from "leva";
 import { ThreeJSInstances } from "./ThreeJSInstances.tsx";
 import { HexLayout } from "./utilities/HexLayout.ts";
+import type { Tile } from "./utilities/HexLayout.ts";
 import type { AxialCoord } from "./utilities/HexCoords.ts";
 import { PointerSlotTracker } from "./PointerSlotTracker.tsx";
 import { LayoutRenderer } from "./components/LayoutRenderer.tsx";
+import type { TileRegistry } from "./components/LayoutRenderer.tsx";
 import { TileDeck } from "./components/TileDeck.tsx";
 import Trees from "./tiles/Trees.tsx";
 import Rocks from "./tiles/Rocks.tsx";
@@ -17,22 +19,40 @@ import Stumps from "./tiles/Stumps.tsx";
 import Logs from "./tiles/Logs.tsx";
 import Flowers from "./tiles/Flowers.tsx";
 
-const AVAILABLE_TILES = [
-  Trees,
-  Rocks,
-  Bushes,
-  Logs,
-  Mushrooms,
-  Stumps,
-  Flowers,
-];
+export const TILE_REGISTRY: TileRegistry = {
+  Trees: Trees,
+  Rocks: Rocks,
+  Bushes: Bushes,
+  Logs: Logs,
+  Mushrooms: Mushrooms,
+  Stumps: Stumps,
+  Flowers: Flowers,
+};
+
+const LAYOUT_STORAGE_KEY = "stylized-nature.layout";
+
+function loadLayout(): HexLayout {
+  const saved = localStorage.getItem(LAYOUT_STORAGE_KEY);
+  if (!saved) {
+    return new HexLayout();
+  }
+  try {
+    return HexLayout.fromJSON(saved);
+  } catch {
+    return new HexLayout();
+  }
+}
 
 function App() {
-  const [layout, setLayout] = useState(new HexLayout());
+  const [layout, setLayout] = useState(loadLayout);
   const [hoveredSlot, setHoveredSlot] = useState<AxialCoord | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<AxialCoord | null>(null);
   const [isDeckHovered, setIsDeckHovered] = useState(false);
-  const [selectedTileIndex, setSelectedTileIndex] = useState<number | null>(0);
+  const [selectedTile, setSelectedTile] = useState<Tile | null>("Trees");
+
+  useEffect(() => {
+    localStorage.setItem(LAYOUT_STORAGE_KEY, layout.toJSON());
+  }, [layout]);
 
   const handleDoubleClick = useCallback(
     (slot: AxialCoord | null) => {
@@ -43,12 +63,11 @@ function App() {
         setHoveredSlot(null);
         setSelectedSlot(null);
         setLayout((l) => l.removeTile(slot));
-      } else if (selectedTileIndex !== null) {
-        const selectedTile = AVAILABLE_TILES[selectedTileIndex];
+      } else if (selectedTile !== null) {
         setLayout((l) => l.addTile(selectedTile, slot));
       }
     },
-    [layout, selectedTileIndex],
+    [layout, selectedTile],
   );
 
   // Debug
@@ -102,6 +121,7 @@ function App() {
       </directionalLight>
       <ThreeJSInstances>
         <LayoutRenderer
+          tileRegistry={TILE_REGISTRY}
           slots={layout.slots()}
           emptySlots={layout.emptySlots()}
           showEmptySlots
@@ -109,10 +129,10 @@ function App() {
           selectedSlot={selectedSlot}
         />
         <TileDeck
-          tiles={AVAILABLE_TILES}
+          tileRegistry={TILE_REGISTRY}
           onHoverChange={setIsDeckHovered}
-          selectedTileIndex={selectedTileIndex}
-          onTileSelect={setSelectedTileIndex}
+          selectedTile={selectedTile}
+          onTileSelect={setSelectedTile}
         />
       </ThreeJSInstances>
       <PointerSlotTracker

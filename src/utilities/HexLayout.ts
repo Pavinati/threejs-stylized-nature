@@ -1,5 +1,3 @@
-import type { ComponentType } from "react";
-import type { Euler, Vector3 } from "three";
 import { immerable, produce } from "immer";
 import type { Draft } from "immer";
 import { NEIGHBOR_DIRECTIONS } from "./HexCoords.ts";
@@ -7,10 +5,32 @@ import type { AxialCoord } from "./HexCoords.ts";
 
 const INITIAL_EMPTY_SLOT: AxialCoord = { q: 0, r: 0 };
 
-export type Component = ComponentType<{ position?: Vector3; rotation?: Euler }>;
+export type Tile =
+  | "Trees"
+  | "Rocks"
+  | "Bushes"
+  | "Logs"
+  | "Mushrooms"
+  | "Stumps"
+  | "Flowers";
+
+function isValidTile(v: string): v is Tile {
+  switch (v) {
+    case "Trees":
+    case "Rocks":
+    case "Bushes":
+    case "Logs":
+    case "Mushrooms":
+    case "Stumps":
+    case "Flowers":
+      return true;
+    default:
+      return false;
+  }
+}
 
 export interface LayoutSlot {
-  Tile: Component;
+  tile: Tile;
   position: AxialCoord;
   /** Multiple of 60 degrees, e.g. 1 = 60deg, 2 = 120deg. */
   rotationStep?: number;
@@ -18,6 +38,12 @@ export interface LayoutSlot {
 
 // Type alias for better readability and compile-time safety
 type SlotKey = string;
+
+export interface SerializedLayoutSlot {
+  tileName: string;
+  position: AxialCoord;
+  rotationStep?: number;
+}
 
 export function slotKey({ q, r }: AxialCoord): SlotKey {
   return `${q},${r}`;
@@ -37,14 +63,14 @@ export class HexLayout {
   init(initialLayout: LayoutSlot[] = []) {
     return produce(this, () => {
       let updatedDraft: Draft<HexLayout> = new HexLayout();
-      initialLayout.forEach(({ position, Tile, rotationStep }) => {
-        updatedDraft = updatedDraft.addTile(Tile, position, rotationStep);
+      initialLayout.forEach(({ tile, position, rotationStep }) => {
+        updatedDraft = updatedDraft.addTile(tile, position, rotationStep);
       });
       return updatedDraft;
     });
   }
 
-  addTile(Tile: Component, position: AxialCoord, rotationStep?: number) {
+  addTile(tile: Tile, position: AxialCoord, rotationStep?: number) {
     const key = slotKey(position);
     if (!this._emptySlots.has(key)) {
       throw new Error("Can only add tile to an empty slot.");
@@ -54,7 +80,7 @@ export class HexLayout {
     }
 
     return produce(this, (draft) => {
-      const newSlot: LayoutSlot = { Tile, position, rotationStep };
+      const newSlot: LayoutSlot = { tile, position, rotationStep };
       draft._layoutSlots.set(key, newSlot);
 
       // Update empty slots: remove the new tile's position and add its neighbors
@@ -135,5 +161,43 @@ export class HexLayout {
 
   isSlotEmpty(position: AxialCoord): boolean {
     return this._emptySlots.has(slotKey(position));
+  }
+
+  toJSON(): string {
+    const slots = Array.from(this._layoutSlots.values());
+    return JSON.stringify(slots);
+  }
+
+  static fromJSON(s: string): HexLayout {
+    const slots: LayoutSlot[] = [];
+    const j: unknown = JSON.parse(s);
+
+    if (j && Array.isArray(j)) {
+      j.forEach((slot: unknown) => {
+        if (slot && typeof slot === "object") {
+          if ("tile" in slot && "position" in slot) {
+            const { tile, position } = slot;
+            if (typeof tile !== "string" || !isValidTile(tile)) {
+              return;
+            }
+            let rotationStep: number | undefined;
+            if (
+              "rotationStep" in slot &&
+              typeof slot.rotationStep === "number"
+            ) {
+              rotationStep = slot.rotationStep;
+            }
+            if (position && typeof position === "object") {
+              if ("q" in position && "r" in position) {
+                const { q, r } = position;
+                if (typeof q === "number" && typeof r === "number")
+                  slots.push({ tile, position: { q, r }, rotationStep });
+              }
+            }
+          }
+        }
+      });
+    }
+    return new HexLayout().init(slots);
   }
 }

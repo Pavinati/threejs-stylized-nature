@@ -3,31 +3,28 @@ import { Vector3 } from "three";
 import { useThree } from "@react-three/fiber";
 import { Hud, OrthographicCamera } from "@react-three/drei";
 import { TileThumbnail } from "./TileThumbnail.tsx";
-import type { Component } from "../utilities/HexLayout.ts";
+import type { Tile } from "../utilities/HexLayout.ts";
+import type { Component, TileRegistry } from "./LayoutRenderer.tsx";
 
 export interface TileDeckProps {
-  tiles: Component[];
-  selectedTileIndex: number | null;
-  onTileSelect?: (index: number | null) => void;
+  tileRegistry: TileRegistry;
+  selectedTile: Tile | null;
+  onTileSelect?: (tile: Tile | null) => void;
   onHoverChange?: (hovered: boolean) => void;
 }
 
 export function TileDeck({
-  tiles,
-  selectedTileIndex,
+  tileRegistry,
+  selectedTile,
   onTileSelect,
   onHoverChange,
 }: TileDeckProps) {
   const { size } = useThree();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-  const handleTileSelect = (index: number | null) => {
-    if (!index) {
-      console.log(index);
-      console.log(selectedTileIndex);
-    }
-    if (selectedTileIndex !== index) {
-      onTileSelect?.(index);
+  const handleTileSelect = (tile: Tile | null) => {
+    if (selectedTile !== tile) {
+      onTileSelect?.(tile);
     }
   };
 
@@ -67,22 +64,22 @@ export function TileDeck({
             depthWrite={false}
           />
         </mesh>
-        {tiles.map((Tile, index) => {
+        {Object.entries(tileRegistry).map(([tile, TileComponent], index) => {
           const itemX = index * (previewSize + 10) + pad - hw;
           const position = new Vector3(itemX, 0, 0.1); // Slightly raised to stop propagation
           return (
             <TileThumbnail
               key={index}
-              Tile={Tile}
+              Tile={TileComponent}
               size={previewSize}
               position={position}
               hovered={hoveredIndex === index}
-              selected={selectedTileIndex === index}
+              selected={selectedTile === tile}
               onPointerEnter={() => setHoveredIndex(index)}
               onPointerLeave={() => setHoveredIndex(null)}
               onClick={(e) => {
                 e.stopPropagation();
-                handleTileSelect(index);
+                handleTileSelect(tile as Tile);
               }}
             />
           );

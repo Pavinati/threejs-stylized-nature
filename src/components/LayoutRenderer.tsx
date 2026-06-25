@@ -1,10 +1,16 @@
+import type { ComponentType } from "react";
 import { Euler } from "three";
+import type { Vector3 } from "three";
 import { EmptyTileSlot } from "./EmptyTileSlot.tsx";
 import { SlotHighlight } from "./SlotHighlight.tsx";
 import { axialToVector3 } from "../utilities/HexCoords.ts";
 import { slotKey } from "../utilities/HexLayout.ts";
 import type { AxialCoord } from "../utilities/HexCoords.ts";
 import type { LayoutSlot } from "../utilities/HexLayout.ts";
+import type { Tile } from "../utilities/HexLayout.ts";
+
+export type Component = ComponentType<{ position?: Vector3; rotation?: Euler }>;
+export type TileRegistry = Record<Tile, Component>;
 
 function rotationStepToRadians(step: number): Euler {
   const yAxysRotation = step * (Math.PI / 3);
@@ -12,6 +18,7 @@ function rotationStepToRadians(step: number): Euler {
 }
 
 export interface LayoutRendererProps {
+  tileRegistry: TileRegistry;
   slots: LayoutSlot[];
   emptySlots: AxialCoord[];
   showEmptySlots?: boolean;
@@ -20,6 +27,7 @@ export interface LayoutRendererProps {
 }
 
 export function LayoutRenderer({
+  tileRegistry,
   slots,
   emptySlots,
   hoveredSlot = null,
@@ -27,13 +35,16 @@ export function LayoutRenderer({
 }: LayoutRendererProps) {
   return (
     <>
-      {slots.map(({ position, Tile, rotationStep = 0 }) => (
-        <Tile
-          key={slotKey(position)}
-          position={axialToVector3(position)}
-          rotation={rotationStepToRadians(rotationStep)}
-        />
-      ))}
+      {slots.map(({ tile, position, rotationStep = 0 }) => {
+        const TileComponent = tileRegistry[tile];
+        return (
+          <TileComponent
+            key={slotKey(position)}
+            position={axialToVector3(position)}
+            rotation={rotationStepToRadians(rotationStep)}
+          />
+        );
+      })}
       {emptySlots.map((p) => (
         <EmptyTileSlot
           key={slotKey(p)}

@@ -5,7 +5,7 @@ import { createPortal, useFrame, useThree } from "@react-three/fiber";
 import type { ThreeEvent } from "@react-three/fiber";
 import { Line, useFBO } from "@react-three/drei";
 import { ThreeJSInstances } from "../ThreeJSInstances.tsx";
-import type { Component } from "../utilities/HexLayout.ts";
+import type { Component } from "./LayoutRenderer.tsx";
 
 const FRAME_SIZE = 2.6;
 

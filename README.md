@@ -1,73 +1,36 @@
-# React + TypeScript + Vite
+# ThreeJS Journey Challenge #24 - Stylized Nature
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is my entry in the [ThreeJS Joruney 24th challenge](https://threejs-journey.com/challenges/024-stylized-nature).
 
-Currently, two official plugins are available:
+The idea was to build a small landscape of hexagonal tiles, like in the popular "Settlers of Catan" game.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- No imported models or textures. Everything is created by standard components or computed dynamically.
+  - This adds additional stress on the hardware, but I wanted this to be a coding challenge more than an editing one.
+- Hex grids and coordinates implemented in pure TypeScript
+- 3D tiles rendered as texture in the tile selection box. Renders once and then saved into an FBO.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Known issues
 
-## Expanding the ESLint configuration
+Due to effort and time limitation there are aspects of this projects that would require fixing.
+Maybe in the future i'll come back to this and improve them.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Performances when rendering 20+ tiles (partially due to the component structure).
+- Camera clipping when rotating board at almost ground level.
+- Shadow camera has fixed size and does not adapt to the board size.
 
-```js
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
+## Stack
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- React as main rendering framwork.
+- ThreeJS (through R3F) for 3D rendering.
+- Drei for helpers and common components.
+- Vite as bundler.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
-```
+## Credits
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Huge shoutout to the creators of https://www.redblobgames.com/grids/hexagons/
+That was a good source for learning the math behind hex grid coordinates
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
-
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs["recommended-typescript"],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
-```
+Bruno Simon as the community behind [ThreeJS Journey](https://threejs-journey.com/) for inspiration
+and encouragement for taking part into those challenges.

@@ -12,7 +12,7 @@ const STUMP_POSITION_RANGE = 1.5;
 
 interface StumpArgs {
   position: Vector3;
-  rotation: number;
+  rotation: Euler;
   scale: number;
 }
 
@@ -30,7 +30,7 @@ export default function Stumps({ position, rotation }: StumpsProps) {
       const r = Math.sqrt(Math.random()) * STUMP_POSITION_RANGE;
       args.push({
         position: new Vector3(Math.cos(theta) * r, 0, Math.sin(theta) * r),
-        rotation: Math.random() * Math.PI * 2,
+        rotation: new Euler(0, Math.random() * Math.PI * 2, 0),
         scale: 0.6 + Math.random() * 0.4,
       });
     }
@@ -44,7 +44,7 @@ export default function Stumps({ position, rotation }: StumpsProps) {
         <Stump
           key={index}
           position={position}
-          rotation={[0, rotation, 0]}
+          rotation={rotation}
           scale={scale}
         />
       ))}

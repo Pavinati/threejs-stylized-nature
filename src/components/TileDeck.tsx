@@ -8,7 +8,7 @@ import { useThree } from "@react-three/fiber";
 import { Hud, OrthographicCamera } from "@react-three/drei";
 import { TileThumbnail } from "./TileThumbnail.tsx";
 import type { Tile } from "../utilities/HexLayout.ts";
-import type { Component, TileRegistry } from "./LayoutRenderer.tsx";
+import type { TileRegistry } from "./LayoutRenderer.tsx";
 
 export interface TileDeckProps {
   tileRegistry: TileRegistry;

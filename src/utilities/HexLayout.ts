@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Mattia Pavinati <mattia.pavinati@gmail.com>
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 import { immerable, produce } from "immer";
 import type { Draft } from "immer";
 import { NEIGHBOR_DIRECTIONS } from "./HexCoords.ts";

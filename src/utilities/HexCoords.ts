@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Mattia Pavinati <mattia.pavinati@gmail.com>
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 // Hexagonal grid using Axial coordinates
 //             -2  __   2
 //  r axys  -1  __/  \__   1    s axys

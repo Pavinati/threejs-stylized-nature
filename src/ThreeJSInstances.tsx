@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Mattia Pavinati <mattia.pavinati@gmail.com>
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 import { createInstances } from "@react-three/drei";
 import { HEX_SIZE } from "./utilities/HexCoords";
 

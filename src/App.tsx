@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Mattia Pavinati <mattia.pavinati@gmail.com>
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
 import { useCallback, useEffect, useState } from "react";
 import { CameraHelper, PCFShadowMap } from "three";
 import { Canvas } from "@react-three/fiber";

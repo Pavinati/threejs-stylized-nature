@@ -11,6 +11,7 @@ import { PointerSlotTracker } from "./PointerSlotTracker.tsx";
 import { LayoutRenderer } from "./components/LayoutRenderer.tsx";
 import type { TileRegistry } from "./components/LayoutRenderer.tsx";
 import { TileDeck } from "./components/TileDeck.tsx";
+import { Tutorial } from "./components/Tutorial.tsx";
 import Trees from "./tiles/Trees.tsx";
 import Rocks from "./tiles/Rocks.tsx";
 import Bushes from "./tiles/Bushes.tsx";
@@ -49,6 +50,7 @@ function App() {
   const [selectedSlot, setSelectedSlot] = useState<AxialCoord | null>(null);
   const [isDeckHovered, setIsDeckHovered] = useState(false);
   const [selectedTile, setSelectedTile] = useState<Tile | null>("Trees");
+  const [showTutorial, setShowTutorial] = useState(true);
 
   useEffect(() => {
     localStorage.setItem(LAYOUT_STORAGE_KEY, layout.toJSON());
@@ -114,63 +116,66 @@ function App() {
   });
 
   return (
-    <Canvas
-      className="fixed w-screen"
-      shadows={{ enabled: true, type: PCFShadowMap }}
-    >
-      <color attach="background" args={["#808080"]} />
-      <OrthographicCamera
-        makeDefault
-        position={[0, 5, 5]}
-        near={near}
-        far={far}
-        zoom={zoom}
-      />
-      <OrbitControls maxPolarAngle={Math.PI / 2} enabled={!isDeckHovered} />
-      <ambientLight intensity={0.5} />
-      <directionalLight
-        position={[2.3, 8.15, 3.6]}
-        intensity={1}
-        castShadow
-        shadow-mapSize={[1024, 1024]}
-        shadow-bias={bias}
+    <>
+      {showTutorial && <Tutorial onClose={() => setShowTutorial(false)} />}
+      <Canvas
+        className="fixed w-screen"
+        shadows={{ enabled: true, type: PCFShadowMap }}
       >
-        <orthographicCamera
-          attach="shadow-camera"
-          near={3}
-          far={13}
-          left={-cameraHSize}
-          right={cameraHSize}
-          top={cameraHSize}
-          bottom={-cameraHSize}
+        <color attach="background" args={["#808080"]} />
+        <OrthographicCamera
+          makeDefault
+          position={[0, 5, 5]}
+          near={near}
+          far={far}
+          zoom={zoom}
+        />
+        <OrbitControls maxPolarAngle={Math.PI / 2} enabled={!isDeckHovered} />
+        <ambientLight intensity={0.5} />
+        <directionalLight
+          position={[2.3, 8.15, 3.6]}
+          intensity={1}
+          castShadow
+          shadow-mapSize={[1024, 1024]}
+          shadow-bias={bias}
         >
-          {showLightHelper && <Helper type={CameraHelper} />}
-        </orthographicCamera>
-      </directionalLight>
-      <ThreeJSInstances>
-        <LayoutRenderer
-          tileRegistry={TILE_REGISTRY}
-          slots={layout.slots()}
-          emptySlots={layout.emptySlots()}
-          showEmptySlots
-          hoveredSlot={hoveredSlot}
-          selectedSlot={selectedSlot}
+          <orthographicCamera
+            attach="shadow-camera"
+            near={3}
+            far={13}
+            left={-cameraHSize}
+            right={cameraHSize}
+            top={cameraHSize}
+            bottom={-cameraHSize}
+          >
+            {showLightHelper && <Helper type={CameraHelper} />}
+          </orthographicCamera>
+        </directionalLight>
+        <ThreeJSInstances>
+          <LayoutRenderer
+            tileRegistry={TILE_REGISTRY}
+            slots={layout.slots()}
+            emptySlots={layout.emptySlots()}
+            showEmptySlots
+            hoveredSlot={hoveredSlot}
+            selectedSlot={selectedSlot}
+          />
+          <TileDeck
+            tileRegistry={TILE_REGISTRY}
+            onHoverChange={setIsDeckHovered}
+            selectedTile={selectedTile}
+            onTileSelect={setSelectedTile}
+          />
+        </ThreeJSInstances>
+        <PointerSlotTracker
+          validSlots={layout.validSlots()}
+          onHoverSlot={setHoveredSlot}
+          onSelectSlot={setSelectedSlot}
+          onRemoveTile={handleDoubleClick}
+          disabled={isDeckHovered}
         />
-        <TileDeck
-          tileRegistry={TILE_REGISTRY}
-          onHoverChange={setIsDeckHovered}
-          selectedTile={selectedTile}
-          onTileSelect={setSelectedTile}
-        />
-      </ThreeJSInstances>
-      <PointerSlotTracker
-        validSlots={layout.validSlots()}
-        onHoverSlot={setHoveredSlot}
-        onSelectSlot={setSelectedSlot}
-        onRemoveTile={handleDoubleClick}
-        disabled={isDeckHovered}
-      />
-    </Canvas>
+      </Canvas>
+    </>
   );
 }
 

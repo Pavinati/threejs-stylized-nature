@@ -85,10 +85,10 @@ function App() {
       max: 10,
     },
     far: {
-      value: 50,
+      value: 100,
       step: 0.1,
       min: 1,
-      max: 50,
+      max: 500,
     },
     zoom: {
       value: 100,
@@ -129,7 +129,7 @@ function App() {
         <color attach="background" args={["#808080"]} />
         <OrthographicCamera
           makeDefault
-          position={[0, 5, 5]}
+          position={[0, 30, 30]}
           near={near}
           far={far}
           zoom={zoom}

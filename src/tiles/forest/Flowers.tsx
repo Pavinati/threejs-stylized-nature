@@ -4,8 +4,8 @@
 
 import { useMemo } from "react";
 import { Euler, Vector3 } from "three";
-import { GrassTileBase } from "../components/GrassTileBase";
-import { Flower } from "../components/Flower";
+import { GrassTileBase } from "./GrassTileBase";
+import { Flower } from "./resources/Flower";
 
 const FLOWER_COUNT = 10;
 const FLOWER_POSITION_RANGE = 1.7;

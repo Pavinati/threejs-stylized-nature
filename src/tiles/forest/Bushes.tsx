@@ -4,8 +4,8 @@
 
 import { useMemo } from "react";
 import { Euler, Vector3 } from "three";
-import { GrassTileBase } from "../components/GrassTileBase";
-import { Bush } from "../components/Bush";
+import { GrassTileBase } from "./GrassTileBase";
+import { Bush } from "./resources/Bush";
 
 const BUSH_COUNT = 6;
 const BUSH_POSITION_RANGE = 1.6;

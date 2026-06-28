@@ -16,13 +16,13 @@ import { LayoutRenderer } from "./components/LayoutRenderer.tsx";
 import type { TileRegistry } from "./components/LayoutRenderer.tsx";
 import { TileDeck } from "./components/TileDeck.tsx";
 import { Tutorial } from "./components/Tutorial.tsx";
-import Trees from "./tiles/Trees.tsx";
-import Rocks from "./tiles/Rocks.tsx";
-import Bushes from "./tiles/Bushes.tsx";
-import Mushrooms from "./tiles/Mushrooms.tsx";
-import Stumps from "./tiles/Stumps.tsx";
-import Logs from "./tiles/Logs.tsx";
-import Flowers from "./tiles/Flowers.tsx";
+import Trees from "./tiles/forest/Trees.tsx";
+import Rocks from "./tiles/forest/Rocks.tsx";
+import Bushes from "./tiles/forest/Bushes.tsx";
+import Mushrooms from "./tiles/forest/Mushrooms.tsx";
+import Stumps from "./tiles/forest/Stumps.tsx";
+import Logs from "./tiles/forest/Logs.tsx";
+import Flowers from "./tiles/forest/Flowers.tsx";
 
 export const TILE_REGISTRY: TileRegistry = {
   Trees: Trees,

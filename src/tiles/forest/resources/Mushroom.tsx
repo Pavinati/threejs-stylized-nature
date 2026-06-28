@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 import type { Vector3 } from "three";
-import { MushroomStripe, UpperCap, LowerCap } from "../ThreeJSInstances";
+import { MushroomStripe, UpperCap, LowerCap } from "../../../ThreeJSInstances";
 
 export interface MushroomProps {
   position?: Vector3;

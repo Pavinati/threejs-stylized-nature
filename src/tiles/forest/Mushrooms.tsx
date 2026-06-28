@@ -4,8 +4,8 @@
 
 import { useMemo } from "react";
 import { Euler, Vector3 } from "three";
-import { GrassTileBase } from "../components/GrassTileBase";
-import { Mushroom } from "../components/Mushroom";
+import { GrassTileBase } from "./GrassTileBase";
+import { Mushroom } from "./resources/Mushroom";
 
 const MUSHROOM_COUNT = 8;
 const MUSHROOM_POSITION_RANGE = 1.6;

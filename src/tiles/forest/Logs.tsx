@@ -4,8 +4,8 @@
 
 import { useMemo } from "react";
 import { Euler, Vector3 } from "three";
-import { GrassTileBase } from "../components/GrassTileBase";
-import { Log } from "../components/Log";
+import { GrassTileBase } from "./GrassTileBase";
+import { Log } from "./resources/Log";
 
 const LOG_COUNT = 3;
 const LOG_POSITION_RANGE = 1.3;

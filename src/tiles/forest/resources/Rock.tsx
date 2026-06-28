@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 import type { Euler, Vector3 } from "three";
-import { Rock as RockInstance } from "../ThreeJSInstances";
+import { Rock as RockInstance } from "../../../ThreeJSInstances";
 
 export interface RockProps {
   name?: string;

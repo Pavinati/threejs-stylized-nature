@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 import type { Euler, Vector3 } from "three";
-import { Stem, Bloom, Petal } from "../ThreeJSInstances";
+import { Stem, Bloom, Petal } from "../../../ThreeJSInstances";
 
 export interface FlowerProps {
   position?: Vector3;

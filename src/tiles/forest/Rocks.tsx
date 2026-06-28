@@ -4,8 +4,8 @@
 
 import { Fragment, useMemo } from "react";
 import { Euler, Vector3 } from "three";
-import { GrassTileBase } from "../components/GrassTileBase";
-import { Rock } from "../components/Rock";
+import { GrassTileBase } from "./GrassTileBase";
+import { Rock } from "./resources/Rock";
 
 const ROCK_COUNT = 6;
 const ROCK_POSITION_RANGE = 1.4;

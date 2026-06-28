@@ -4,8 +4,8 @@
 
 import { useMemo } from "react";
 import { Euler, Vector3 } from "three";
-import { GrassTileBase } from "../components/GrassTileBase";
-import { Stump } from "../components/Stump";
+import { GrassTileBase } from "./GrassTileBase";
+import { Stump } from "./resources/Stump";
 
 const STUMP_COUNT = 4;
 const STUMP_POSITION_RANGE = 1.5;

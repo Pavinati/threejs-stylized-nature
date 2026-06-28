@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 import type { Vector3 } from "three";
-import { Trunk, LowLeaves, HighLeaves } from "../ThreeJSInstances";
+import { Trunk, LowLeaves, HighLeaves } from "../../../ThreeJSInstances";
 
 export interface TreeProps {
   position?: Vector3;

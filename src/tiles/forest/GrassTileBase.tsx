@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-only
 
-import { GrassHexagon, SoilHexagon } from "../ThreeJSInstances";
+import { GrassHexagon, SoilHexagon } from "../../ThreeJSInstances";
 
 export function GrassTileBase() {
   return (

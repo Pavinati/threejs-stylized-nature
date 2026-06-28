@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 import type { Euler, Vector3 } from "three";
-import { Stump as StumpInstance } from "../ThreeJSInstances";
+import { Stump as StumpInstance } from "../../../ThreeJSInstances";
 
 export interface StumpProps {
   position?: Vector3;

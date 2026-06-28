@@ -4,6 +4,8 @@ This project is my entry in the [ThreeJS Joruney 24th challenge](https://threejs
 
 The idea was to build a small landscape of hexagonal tiles, like in the popular "Settlers of Catan" game.
 
+You can find a running demo hosted in GitHub pages: https://pavinati.github.io/threejs-stylized-nature/
+
 ## Features
 
 - No imported models or textures. Everything is created by standard components or computed dynamically.

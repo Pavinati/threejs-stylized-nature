@@ -129,7 +129,7 @@ export class HexLayout {
 
       // When removing the last tile, restore the initial empty slot
       if (draft._layoutSlots.size === 0) {
-        this._emptySlots.set(slotKey(INITIAL_EMPTY_SLOT), INITIAL_EMPTY_SLOT);
+        draft._emptySlots.set(slotKey(INITIAL_EMPTY_SLOT), INITIAL_EMPTY_SLOT);
       }
     });
   }

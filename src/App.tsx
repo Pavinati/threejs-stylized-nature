@@ -81,6 +81,12 @@ function App() {
     setLayout((l) => l.rotateTile(selectedSlot, "ccw"));
   }, [selectedSlot, layout]);
 
+  const handleReset = useCallback(() => {
+    setLayout(new HexLayout());
+    setSelectedSlot(null);
+    setHoveredSlot(null);
+  }, []);
+
   const handleDoubleClick = useCallback(
     (slot: AxialCoord | null) => {
       if (!slot) {
@@ -143,6 +149,30 @@ function App() {
   return (
     <>
       {showTutorial && <Tutorial onClose={() => setShowTutorial(false)} />}
+      {(!selectedSlot || !layout.isSlotOccupied(selectedSlot)) && (
+        <div className="fixed bottom-[16%] left-1/2 -translate-x-1/2 z-10">
+          <button
+            onClick={handleReset}
+            className="flex items-center gap-2 bg-black/60 backdrop-blur-sm text-white/80 hover:text-white rounded-xl px-4 py-2 text-sm font-medium transition-colors cursor-pointer"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+              <path d="M3 3v5h5" />
+            </svg>
+            Reset board
+          </button>
+        </div>
+      )}
       {selectedSlot && layout.isSlotOccupied(selectedSlot) && (
         <div className="fixed bottom-[16%] left-1/2 -translate-x-1/2 z-10 flex gap-2">
           <RotateButton

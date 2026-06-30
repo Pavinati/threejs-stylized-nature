@@ -16,7 +16,13 @@ import { LayoutRenderer } from "./components/LayoutRenderer.tsx";
 import type { TileRegistry } from "./components/LayoutRenderer.tsx";
 import { TileDeck } from "./components/TileDeck.tsx";
 import { Tutorial } from "./components/Tutorial.tsx";
-import { RotateButton } from "./components/RotateButton.tsx";
+import { UIButton } from "./components/UIButton.tsx";
+import { SaveIcon } from "./assets/icons/SaveIcon.tsx";
+import { LoadIcon } from "./assets/icons/LoadIcon.tsx";
+import { ResetIcon } from "./assets/icons/ResetIcon.tsx";
+import { ShuffleIcon } from "./assets/icons/ShuffleIcon.tsx";
+import { RotateCWIcon } from "./assets/icons/RotateCWIcon.tsx";
+import { RotateCCWIcon } from "./assets/icons/RotateCCWIcon.tsx";
 import Trees from "./tiles/forest/Trees.tsx";
 import Rocks from "./tiles/forest/Rocks.tsx";
 import Bushes from "./tiles/forest/Bushes.tsx";
@@ -185,48 +191,12 @@ function App() {
       {showTutorial && <Tutorial onClose={() => setShowTutorial(false)} />}
       {(!selectedSlot || !layout.isSlotOccupied(selectedSlot)) && (
         <div className="fixed bottom-[16%] left-1/2 -translate-x-1/2 z-10 flex gap-2">
-          <button
-            onClick={handleSave}
-            className="flex items-center gap-2 bg-black/60 backdrop-blur-sm text-white/80 hover:text-white rounded-xl px-4 py-2 text-sm font-medium transition-colors cursor-pointer"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-            Save
-          </button>
-          <button
+          <UIButton icon={<SaveIcon />} label="Save" onClick={handleSave} />
+          <UIButton
+            icon={<LoadIcon />}
+            label="Load"
             onClick={() => fileInputRef.current?.click()}
-            className="flex items-center gap-2 bg-black/60 backdrop-blur-sm text-white/80 hover:text-white rounded-xl px-4 py-2 text-sm font-medium transition-colors cursor-pointer"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="17 8 12 3 7 8" />
-              <line x1="12" y1="3" x2="12" y2="15" />
-            </svg>
-            Load
-          </button>
+          />
           <input
             ref={fileInputRef}
             type="file"
@@ -234,59 +204,29 @@ function App() {
             className="hidden"
             onChange={handleLoadFile}
           />
-          <button
+          <UIButton
+            icon={<ResetIcon />}
+            label="Reset board"
             onClick={handleReset}
-            className="flex items-center gap-2 bg-black/60 backdrop-blur-sm text-white/80 hover:text-white rounded-xl px-4 py-2 text-sm font-medium transition-colors cursor-pointer"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-              <path d="M3 3v5h5" />
-            </svg>
-            Reset board
-          </button>
+          />
         </div>
       )}
       {selectedSlot && layout.isSlotOccupied(selectedSlot) && (
         <div className="fixed bottom-[16%] left-1/2 -translate-x-1/2 z-10 flex gap-2">
-          <RotateButton
-            direction="ccw"
+          <UIButton
+            icon={<RotateCCWIcon />}
+            label="Rotate CCW"
             onClick={handleRotateCCW}
             disabled={isSelectedTileAnimating}
           />
-          <button
+          <UIButton
+            icon={<ShuffleIcon />}
+            label="Shuffle"
             onClick={handleRerandomize}
-            className="flex items-center gap-2 bg-black/60 backdrop-blur-sm text-white/80 hover:text-white rounded-xl px-4 py-2 text-sm font-medium transition-colors cursor-pointer"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polyline points="16 3 21 3 21 8" />
-              <line x1="4" y1="20" x2="21" y2="3" />
-              <polyline points="21 16 21 21 16 21" />
-              <line x1="15" y1="15" x2="21" y2="21" />
-            </svg>
-            Shuffle
-          </button>
-          <RotateButton
-            direction="cw"
+          />
+          <UIButton
+            icon={<RotateCWIcon />}
+            label="Rotate CW"
             onClick={handleRotateCW}
             disabled={isSelectedTileAnimating}
           />

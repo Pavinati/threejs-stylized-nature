@@ -56,6 +56,11 @@ function App() {
   const [isDeckHovered, setIsDeckHovered] = useState(false);
   const [selectedTile, setSelectedTile] = useState<Tile | null>("Trees");
   const [showTutorial, setShowTutorial] = useState(true);
+  const [isSelectedTileAnimating, setIsSelectedTileAnimating] = useState(false);
+
+  useEffect(() => {
+    setIsSelectedTileAnimating(false);
+  }, [selectedSlot]);
 
   useEffect(() => {
     localStorage.setItem(LAYOUT_STORAGE_KEY, layout.toJSON());
@@ -135,8 +140,16 @@ function App() {
       {showTutorial && <Tutorial onClose={() => setShowTutorial(false)} />}
       {selectedSlot && layout.isSlotOccupied(selectedSlot) && (
         <div className="fixed bottom-[16%] left-1/2 -translate-x-1/2 z-10 flex gap-2">
-          <RotateButton direction="ccw" onClick={handleRotateCCW} />
-          <RotateButton direction="cw" onClick={handleRotateCW} />
+          <RotateButton
+            direction="ccw"
+            onClick={handleRotateCCW}
+            disabled={isSelectedTileAnimating}
+          />
+          <RotateButton
+            direction="cw"
+            onClick={handleRotateCW}
+            disabled={isSelectedTileAnimating}
+          />
         </div>
       )}
       <Canvas
@@ -162,7 +175,7 @@ function App() {
         >
           <orthographicCamera
             attach="shadow-camera"
-            near={3}
+            near={4}
             far={13}
             left={-cameraHSize}
             right={cameraHSize}
@@ -180,6 +193,7 @@ function App() {
             showEmptySlots
             hoveredSlot={hoveredSlot}
             selectedSlot={selectedSlot}
+            onSelectedTileAnimatingChange={setIsSelectedTileAnimating}
           />
           <TileDeck
             tileRegistry={TILE_REGISTRY}

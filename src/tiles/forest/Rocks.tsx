@@ -2,30 +2,18 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-only
 
-import { Fragment, useMemo } from "react";
+import { useMemo } from "react";
 import { Euler, Vector3 } from "three";
-import { GrassTileBase } from "./GrassTileBase";
+import { Tile } from "../../components/Tile";
+import type { TileComponentProps } from "../../components/Tile";
 import { Rock } from "./resources/Rock";
 
 const ROCK_COUNT = 6;
 const ROCK_POSITION_RANGE = 1.4;
 
-interface RockArgs {
-  boulderPosition: Vector3;
-  boulderScale: number;
-  pebblePosition: Vector3;
-  pebbleScale: number;
-  rotation: Euler;
-}
-
-interface RocksProps {
-  position?: Vector3;
-  rotation?: Euler;
-}
-
-export default function Rocks({ position, rotation }: RocksProps) {
-  const rockArgs = useMemo(() => {
-    const randomizedArgs: RockArgs[] = [];
+export default function Rocks(props: TileComponentProps) {
+  const resources = useMemo(() => {
+    const result = [];
     for (let i = 0; i < ROCK_COUNT; i++) {
       const sliceAngle = (2 * Math.PI) / ROCK_COUNT;
       const theta = (i + Math.random()) * sliceAngle;
@@ -43,48 +31,26 @@ export default function Rocks({ position, rotation }: RocksProps) {
         boulderScale * 0.25,
         groupY + dy,
       );
-
-      randomizedArgs.push({
-        boulderPosition,
-        boulderScale,
-        pebblePosition,
-        pebbleScale: boulderScale * 0.4,
-        rotation: new Euler(0, Math.random() * Math.PI * 2, 0),
-      });
+      const rotation = new Euler(0, Math.random() * Math.PI * 2, 0);
+      result.push(
+        <>
+          <Rock
+            position={boulderPosition}
+            scale={boulderScale}
+            rotation={rotation}
+            name="boulder"
+          />
+          <Rock
+            position={pebblePosition}
+            rotation={rotation}
+            scale={boulderScale * 0.4}
+            name="pebble"
+          />
+        </>,
+      );
     }
-    return randomizedArgs;
+    return result;
   }, []);
 
-  return (
-    <group position={position} rotation={rotation} name="rocks">
-      <GrassTileBase />
-      {rockArgs.map(
-        (
-          {
-            boulderScale,
-            boulderPosition,
-            pebblePosition,
-            pebbleScale,
-            rotation,
-          },
-          index,
-        ) => (
-          <Fragment key={index}>
-            <Rock
-              position={boulderPosition}
-              scale={boulderScale}
-              rotation={rotation}
-              name="boulder"
-            />
-            <Rock
-              position={pebblePosition}
-              rotation={rotation}
-              scale={pebbleScale}
-              name="pebble"
-            />
-          </Fragment>
-        ),
-      )}
-    </group>
-  );
+  return <Tile {...props} resources={resources} />;
 }

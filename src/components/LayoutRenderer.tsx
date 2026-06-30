@@ -2,24 +2,17 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-only
 
-import type { ComponentType } from "react";
-import { Euler } from "three";
 import type { Vector3 } from "three";
 import { EmptyTileSlot } from "./EmptyTileSlot.tsx";
 import { SlotHighlight } from "./SlotHighlight.tsx";
 import { axialToVector3 } from "../utilities/HexCoords.ts";
 import { slotKey } from "../utilities/HexLayout.ts";
+import type { TileComponentType } from "./Tile.tsx";
 import type { AxialCoord } from "../utilities/HexCoords.ts";
 import type { LayoutSlot } from "../utilities/HexLayout.ts";
 import type { Tile } from "../utilities/HexLayout.ts";
 
-export type Component = ComponentType<{ position?: Vector3; rotation?: Euler }>;
-export type TileRegistry = Record<Tile, Component>;
-
-function rotationStepToRadians(step: number): Euler {
-  const yAxysRotation = step * (Math.PI / 3);
-  return new Euler(0, yAxysRotation, 0);
-}
+export type TileRegistry = Record<Tile, TileComponentType>;
 
 export interface LayoutRendererProps {
   tileRegistry: TileRegistry;
@@ -28,6 +21,7 @@ export interface LayoutRendererProps {
   showEmptySlots?: boolean;
   hoveredSlot?: AxialCoord | null;
   selectedSlot?: AxialCoord | null;
+  onSelectedTileAnimatingChange?: (animating: boolean) => void;
 }
 
 export function LayoutRenderer({
@@ -36,25 +30,28 @@ export function LayoutRenderer({
   emptySlots,
   hoveredSlot = null,
   selectedSlot = null,
+  onSelectedTileAnimatingChange,
 }: LayoutRendererProps) {
   return (
     <>
       {slots.map(({ tile, position, rotationStep = 0 }) => {
         const TileComponent = tileRegistry[tile];
+        const key = slotKey(position);
+        const isSelected =
+          selectedSlot != null && slotKey(selectedSlot) === key;
         return (
           <TileComponent
-            key={slotKey(position)}
-            position={axialToVector3(position)}
-            rotation={rotationStepToRadians(rotationStep)}
+            key={key}
+            position={axialToVector3(position) as Vector3}
+            rotationStep={rotationStep}
+            onAnimatingChange={
+              isSelected ? onSelectedTileAnimatingChange : undefined
+            }
           />
         );
       })}
       {emptySlots.map((p) => (
-        <EmptyTileSlot
-          key={slotKey(p)}
-          position={axialToVector3(p)}
-          rotation={rotationStepToRadians(0)}
-        />
+        <EmptyTileSlot key={slotKey(p)} position={axialToVector3(p)} />
       ))}
       {hoveredSlot &&
         (!selectedSlot || slotKey(hoveredSlot) !== slotKey(selectedSlot)) && (

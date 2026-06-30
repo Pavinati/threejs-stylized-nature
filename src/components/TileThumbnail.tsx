@@ -9,7 +9,7 @@ import { createPortal, useFrame, useThree } from "@react-three/fiber";
 import type { ThreeEvent } from "@react-three/fiber";
 import { Line, useFBO } from "@react-three/drei";
 import { ThreeJSInstances } from "../ThreeJSInstances.tsx";
-import type { Component } from "./LayoutRenderer.tsx";
+import type { TileComponentType } from "./Tile.tsx";
 
 const FRAME_SIZE = 2.6;
 
@@ -19,7 +19,7 @@ const HIGHLIGHT_STYLE = {
 };
 
 export interface TileThumbnailProps {
-  Tile: Component;
+  Tile: TileComponentType;
   size: number;
   resolution?: number;
   position: Vector3;
@@ -120,7 +120,7 @@ export function TileThumbnail({
           <ThreeJSInstances>
             <ambientLight intensity={0.6} />
             <directionalLight position={[2.6, 4, 2.6]} intensity={1} />
-            <Tile />
+            <Tile animate={false} />
           </ThreeJSInstances>,
           scene,
         )}

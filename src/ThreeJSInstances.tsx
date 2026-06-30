@@ -46,15 +46,15 @@ interface ThreeJSInstancesProps {
 
 function BaseTileInstances({ children }: ThreeJSInstancesProps) {
   return (
-    <GrassHexagonIntances receiveShadow>
+    <GrassHexagonIntances receiveShadow frustumCulled={false}>
       <cylinderGeometry args={[HEX_SIZE, HEX_SIZE, 0.1, 6]} />
       <meshStandardMaterial color={"#85e385"} />
 
-      <SoilHexagonInstances>
+      <SoilHexagonInstances frustumCulled={false}>
         <cylinderGeometry args={[HEX_SIZE, HEX_SIZE, 0.1, 6, 1, true]} />
         <meshStandardMaterial color={"brown"} />
 
-        <GreyHexagonInstances>
+        <GreyHexagonInstances frustumCulled={false}>
           <cylinderGeometry args={[HEX_SIZE, HEX_SIZE, 0.02, 6]} />
           <meshBasicMaterial color="#ffffff" transparent opacity={0.08} />
 
@@ -67,35 +67,39 @@ function BaseTileInstances({ children }: ThreeJSInstancesProps) {
 
 function ResourceInstances({ children }: ThreeJSInstancesProps) {
   return (
-    <TrunkInstances castShadow receiveShadow>
+    <TrunkInstances castShadow receiveShadow frustumCulled={false}>
       <cylinderGeometry args={[0.15, 0.15, 0.2, 8, 1, true]} />
       <meshStandardMaterial color={"#6b4a2f"} />
 
-      <LowLeavesInstances castShadow receiveShadow>
+      <LowLeavesInstances castShadow receiveShadow frustumCulled={false}>
         <cylinderGeometry args={[0.2, 0.35, 0.3, 8]} />
         <meshStandardMaterial color={"green"} />
 
-        <HighLeavesInstances castShadow receiveShadow>
+        <HighLeavesInstances castShadow receiveShadow frustumCulled={false}>
           <coneGeometry args={[0.3, 1, 8]} />
           <meshStandardMaterial color={"green"} />
 
-          <LobeInstances castShadow receiveShadow>
+          <LobeInstances castShadow receiveShadow frustumCulled={false}>
             <icosahedronGeometry args={[0.28, 0]} />
             <meshStandardMaterial color={"#5fb85f"} />
 
-            <RockInstances castShadow receiveShadow>
+            <RockInstances castShadow receiveShadow frustumCulled={false}>
               <dodecahedronGeometry args={[1, 0]} />
               <meshStandardMaterial color={"#8a8a8a"} />
 
-              <OuterLogInstances castShadow receiveShadow>
+              <OuterLogInstances castShadow receiveShadow frustumCulled={false}>
                 <cylinderGeometry args={[0.15, 0.15, 0.8, 8, 1, true]} />
                 <meshStandardMaterial color={"#6b4a2f"} />
 
-                <EndLogInstances castShadow receiveShadow>
+                <EndLogInstances castShadow receiveShadow frustumCulled={false}>
                   <circleGeometry args={[0.15, 8]} />
                   <meshStandardMaterial color={"#d8c19a"} />
 
-                  <StumpInstances castShadow receiveShadow>
+                  <StumpInstances
+                    castShadow
+                    receiveShadow
+                    frustumCulled={false}
+                  >
                     <cylinderGeometry args={[0.18, 0.22, 0.3, 8]} />
                     <meshStandardMaterial color={"#6b4a2f"} />
 
@@ -113,27 +117,27 @@ function ResourceInstances({ children }: ThreeJSInstancesProps) {
 
 function MushroomAndFlowerInstances({ children }: ThreeJSInstancesProps) {
   return (
-    <MushroomStripeInstances castShadow receiveShadow>
+    <MushroomStripeInstances castShadow receiveShadow frustumCulled={false}>
       <cylinderGeometry args={[0.04, 0.05, 0.16, 8, 1, true]} />
       <meshStandardMaterial color={"#f1e6d2"} />
 
-      <UpperCapInstances castShadow receiveShadow>
+      <UpperCapInstances castShadow receiveShadow frustumCulled={false}>
         <sphereGeometry args={[0.12, 8, 8, 0, Math.PI * 2, 0, Math.PI / 2]} />
         <meshStandardMaterial color={"#c43d3d"} />
 
-        <LowerCapInstances castShadow>
+        <LowerCapInstances castShadow frustumCulled={false}>
           <circleGeometry args={[0.12, 8]} />
           <meshStandardMaterial color={"#c43d3d"} />
 
-          <StemIstances castShadow receiveShadow>
+          <StemIstances castShadow receiveShadow frustumCulled={false}>
             <cylinderGeometry args={[0.014, 0.017, 0.12, 6]} />
             <meshStandardMaterial color={"#5fb85f"} />
 
-            <BloomIstances castShadow receiveShadow>
+            <BloomIstances castShadow receiveShadow frustumCulled={false}>
               <sphereGeometry args={[0.028, 8, 8]} />
               <meshStandardMaterial color={"#f2c14e"} />
 
-              <PetalIstances castShadow receiveShadow>
+              <PetalIstances castShadow receiveShadow frustumCulled={false}>
                 <sphereGeometry args={[0.04, 8, 6]} />
                 {/* white color so it can be multiplied by the mesh */}
                 <meshStandardMaterial />

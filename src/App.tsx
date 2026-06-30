@@ -30,6 +30,7 @@ import Mushrooms from "./tiles/forest/Mushrooms.tsx";
 import Stumps from "./tiles/forest/Stumps.tsx";
 import Logs from "./tiles/forest/Logs.tsx";
 import Flowers from "./tiles/forest/Flowers.tsx";
+import Road from "./tiles/forest/Road.tsx";
 
 export const TILE_REGISTRY: TileRegistry = {
   Trees: Trees,
@@ -39,6 +40,7 @@ export const TILE_REGISTRY: TileRegistry = {
   Mushrooms: Mushrooms,
   Stumps: Stumps,
   Flowers: Flowers,
+  Road: Road,
 };
 
 const LAYOUT_STORAGE_KEY = "stylized-nature.layout";

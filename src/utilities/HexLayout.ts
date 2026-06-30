@@ -16,7 +16,8 @@ export type Tile =
   | "Logs"
   | "Mushrooms"
   | "Stumps"
-  | "Flowers";
+  | "Flowers"
+  | "Road";
 
 function isValidTile(v: string): v is Tile {
   switch (v) {
@@ -27,6 +28,7 @@ function isValidTile(v: string): v is Tile {
     case "Mushrooms":
     case "Stumps":
     case "Flowers":
+    case "Road":
       return true;
     default:
       return false;

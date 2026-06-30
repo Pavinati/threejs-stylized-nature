@@ -119,8 +119,9 @@ function App() {
           setLayout(loaded);
           setSelectedSlot(null);
           setHoveredSlot(null);
-        } catch {
+        } catch (e) {
           // ignore invalid files
+          console.log(e);
         }
       };
       reader.readAsText(file);

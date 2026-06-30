@@ -77,7 +77,13 @@ export class HexLayout {
     return produce(this, () => {
       let updatedDraft: Draft<HexLayout> = new HexLayout();
       initialLayout.forEach(({ tile, position, rotationStep, seed }) => {
-        updatedDraft = updatedDraft.addTile(tile, position, rotationStep, seed);
+        updatedDraft = updatedDraft.addTile(
+          tile,
+          position,
+          rotationStep,
+          seed,
+          true,
+        );
       });
       return updatedDraft;
     });
@@ -88,12 +94,13 @@ export class HexLayout {
     position: AxialCoord,
     rotationStep?: number,
     seed?: number,
+    force: boolean = false,
   ) {
     const key = slotKey(position);
-    if (!this._emptySlots.has(key)) {
+    if (!this._emptySlots.has(key) && !force) {
       throw new Error("Can only add tile to an empty slot.");
     }
-    if (this._layoutSlots.has(key)) {
+    if (this._layoutSlots.has(key) && !force) {
       throw new Error("Slot at position already occupied.");
     }
 

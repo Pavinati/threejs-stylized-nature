@@ -33,6 +33,8 @@ function isValidTile(v: string): v is Tile {
   }
 }
 
+export type RotationDirection = "cw" | "ccw";
+
 export interface LayoutSlot {
   tile: Tile;
   position: AxialCoord;
@@ -157,6 +159,18 @@ export class HexLayout {
       }
     }
     return false;
+  }
+
+  rotateTile(position: AxialCoord, direction: RotationDirection = "cw") {
+    const key = slotKey(position);
+    if (!this._layoutSlots.has(key)) {
+      throw new Error("No tile to rotate at the given position.");
+    }
+    return produce(this, (draft) => {
+      const slot = draft._layoutSlots.get(key)!;
+      const delta = direction === "cw" ? -1 : 1;
+      slot.rotationStep = ((slot.rotationStep ?? 0) + delta) % 6;
+    });
   }
 
   isSlotOccupied(position: AxialCoord): boolean {

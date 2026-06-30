@@ -16,6 +16,7 @@ import { LayoutRenderer } from "./components/LayoutRenderer.tsx";
 import type { TileRegistry } from "./components/LayoutRenderer.tsx";
 import { TileDeck } from "./components/TileDeck.tsx";
 import { Tutorial } from "./components/Tutorial.tsx";
+import { RotateButton } from "./components/RotateButton.tsx";
 import Trees from "./tiles/forest/Trees.tsx";
 import Rocks from "./tiles/forest/Rocks.tsx";
 import Bushes from "./tiles/forest/Bushes.tsx";
@@ -59,6 +60,16 @@ function App() {
   useEffect(() => {
     localStorage.setItem(LAYOUT_STORAGE_KEY, layout.toJSON());
   }, [layout]);
+
+  const handleRotateCW = useCallback(() => {
+    if (!selectedSlot || !layout.isSlotOccupied(selectedSlot)) return;
+    setLayout((l) => l.rotateTile(selectedSlot, "cw"));
+  }, [selectedSlot, layout]);
+
+  const handleRotateCCW = useCallback(() => {
+    if (!selectedSlot || !layout.isSlotOccupied(selectedSlot)) return;
+    setLayout((l) => l.rotateTile(selectedSlot, "ccw"));
+  }, [selectedSlot, layout]);
 
   const handleDoubleClick = useCallback(
     (slot: AxialCoord | null) => {
@@ -122,6 +133,12 @@ function App() {
   return (
     <>
       {showTutorial && <Tutorial onClose={() => setShowTutorial(false)} />}
+      {selectedSlot && layout.isSlotOccupied(selectedSlot) && (
+        <div className="fixed bottom-[16%] left-1/2 -translate-x-1/2 z-10 flex gap-2">
+          <RotateButton direction="ccw" onClick={handleRotateCCW} />
+          <RotateButton direction="cw" onClick={handleRotateCW} />
+        </div>
+      )}
       <Canvas
         className="fixed w-screen"
         shadows={{ enabled: true, type: PCFShadowMap }}

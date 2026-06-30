@@ -4,6 +4,7 @@
 
 import { useMemo } from "react";
 import { Vector3 } from "three";
+import Prando from "prando";
 import { Tile } from "../../components/Tile";
 import type { TileComponentProps } from "../../components/Tile";
 import { Mushroom } from "./resources/Mushroom";
@@ -11,19 +12,20 @@ import { Mushroom } from "./resources/Mushroom";
 const MUSHROOM_COUNT = 8;
 const MUSHROOM_POSITION_RANGE = 1.6;
 
-export default function Mushrooms(props: TileComponentProps) {
+export default function Mushrooms({ ...props }: TileComponentProps) {
   const resources = useMemo(() => {
+    const rng = new Prando(props.seed);
     const result = [];
     for (let i = 0; i < MUSHROOM_COUNT; i++) {
       const sliceAngle = (2 * Math.PI) / MUSHROOM_COUNT;
-      const theta = (i + Math.random()) * sliceAngle;
-      const r = Math.sqrt(Math.random()) * MUSHROOM_POSITION_RANGE;
+      const theta = (i + rng.next()) * sliceAngle;
+      const r = Math.sqrt(rng.next()) * MUSHROOM_POSITION_RANGE;
       const position = new Vector3(Math.cos(theta) * r, 0, Math.sin(theta) * r);
-      const scale = 0.3 + Math.random() * 0.8;
+      const scale = 0.3 + rng.next() * 0.8;
       result.push(<Mushroom position={position} scale={scale} />);
     }
     return result;
-  }, []);
+  }, [props.seed]);
 
   return <Tile {...props} resources={resources} />;
 }

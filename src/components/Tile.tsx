@@ -35,6 +35,7 @@ function SpawnItem({ delay = 0, animate, children }: SpawnItemProps) {
 export interface TileComponentProps {
   position?: Vector3;
   rotationStep?: number;
+  seed: number;
   animate?: boolean;
   onAnimatingChange?: (animating: boolean) => void;
 }

@@ -66,6 +66,11 @@ function App() {
     localStorage.setItem(LAYOUT_STORAGE_KEY, layout.toJSON());
   }, [layout]);
 
+  const handleRerandomize = useCallback(() => {
+    if (!selectedSlot || !layout.isSlotOccupied(selectedSlot)) return;
+    setLayout((l) => l.rerandomizeTile(selectedSlot));
+  }, [selectedSlot, layout]);
+
   const handleRotateCW = useCallback(() => {
     if (!selectedSlot || !layout.isSlotOccupied(selectedSlot)) return;
     setLayout((l) => l.rotateTile(selectedSlot, "cw"));
@@ -145,6 +150,28 @@ function App() {
             onClick={handleRotateCCW}
             disabled={isSelectedTileAnimating}
           />
+          <button
+            onClick={handleRerandomize}
+            className="flex items-center gap-2 bg-black/60 backdrop-blur-sm text-white/80 hover:text-white rounded-xl px-4 py-2 text-sm font-medium transition-colors cursor-pointer"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="16 3 21 3 21 8" />
+              <line x1="4" y1="20" x2="21" y2="3" />
+              <polyline points="21 16 21 21 16 21" />
+              <line x1="15" y1="15" x2="21" y2="21" />
+            </svg>
+            Shuffle
+          </button>
           <RotateButton
             direction="cw"
             onClick={handleRotateCW}

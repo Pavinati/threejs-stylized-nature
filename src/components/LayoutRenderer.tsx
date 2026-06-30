@@ -34,7 +34,7 @@ export function LayoutRenderer({
 }: LayoutRendererProps) {
   return (
     <>
-      {slots.map(({ tile, position, rotationStep = 0 }) => {
+      {slots.map(({ tile, position, rotationStep = 0, seed }) => {
         const TileComponent = tileRegistry[tile];
         const key = slotKey(position);
         const isSelected =
@@ -44,6 +44,7 @@ export function LayoutRenderer({
             key={key}
             position={axialToVector3(position) as Vector3}
             rotationStep={rotationStep}
+            seed={seed}
             onAnimatingChange={
               isSelected ? onSelectedTileAnimatingChange : undefined
             }

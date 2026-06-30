@@ -120,7 +120,7 @@ export function TileThumbnail({
           <ThreeJSInstances>
             <ambientLight intensity={0.6} />
             <directionalLight position={[2.6, 4, 2.6]} intensity={1} />
-            <Tile animate={false} />
+            <Tile animate={false} seed={2} />
           </ThreeJSInstances>,
           scene,
         )}

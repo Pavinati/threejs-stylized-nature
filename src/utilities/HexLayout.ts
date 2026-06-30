@@ -40,6 +40,7 @@ export interface LayoutSlot {
   position: AxialCoord;
   /** Multiple of 60 degrees, e.g. 1 = 60deg, 2 = 120deg. */
   rotationStep?: number;
+  seed: number;
 }
 
 // Type alias for better readability and compile-time safety
@@ -53,6 +54,10 @@ export interface SerializedLayoutSlot {
 
 export function slotKey({ q, r }: AxialCoord): SlotKey {
   return `${q},${r}`;
+}
+
+function newTileSeed() {
+  return Math.round(Math.random() * 10000);
 }
 
 export class HexLayout {
@@ -69,14 +74,19 @@ export class HexLayout {
   init(initialLayout: LayoutSlot[] = []) {
     return produce(this, () => {
       let updatedDraft: Draft<HexLayout> = new HexLayout();
-      initialLayout.forEach(({ tile, position, rotationStep }) => {
-        updatedDraft = updatedDraft.addTile(tile, position, rotationStep);
+      initialLayout.forEach(({ tile, position, rotationStep, seed }) => {
+        updatedDraft = updatedDraft.addTile(tile, position, rotationStep, seed);
       });
       return updatedDraft;
     });
   }
 
-  addTile(tile: Tile, position: AxialCoord, rotationStep?: number) {
+  addTile(
+    tile: Tile,
+    position: AxialCoord,
+    rotationStep?: number,
+    seed?: number,
+  ) {
     const key = slotKey(position);
     if (!this._emptySlots.has(key)) {
       throw new Error("Can only add tile to an empty slot.");
@@ -86,7 +96,12 @@ export class HexLayout {
     }
 
     return produce(this, (draft) => {
-      const newSlot: LayoutSlot = { tile, position, rotationStep };
+      const newSlot: LayoutSlot = {
+        tile,
+        position,
+        rotationStep,
+        seed: seed ?? newTileSeed(),
+      };
       draft._layoutSlots.set(key, newSlot);
 
       // Update empty slots: remove the new tile's position and add its neighbors
@@ -161,6 +176,17 @@ export class HexLayout {
     return false;
   }
 
+  rerandomizeTile(position: AxialCoord) {
+    const key = slotKey(position);
+    if (!this._layoutSlots.has(key)) {
+      throw new Error("No tile to rerandomize at the given position.");
+    }
+    return produce(this, (draft) => {
+      const slot = draft._layoutSlots.get(key)!;
+      slot.seed = newTileSeed();
+    });
+  }
+
   rotateTile(position: AxialCoord, direction: RotationDirection = "cw") {
     const key = slotKey(position);
     if (!this._layoutSlots.has(key)) {
@@ -205,11 +231,15 @@ export class HexLayout {
             ) {
               rotationStep = slot.rotationStep;
             }
+            const seed =
+              "seed" in slot && typeof slot.seed === "number"
+                ? slot.seed
+                : newTileSeed();
             if (position && typeof position === "object") {
               if ("q" in position && "r" in position) {
                 const { q, r } = position;
                 if (typeof q === "number" && typeof r === "number")
-                  slots.push({ tile, position: { q, r }, rotationStep });
+                  slots.push({ tile, position: { q, r }, rotationStep, seed });
               }
             }
           }

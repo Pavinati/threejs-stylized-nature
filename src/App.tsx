@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-only
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { CameraHelper, PCFShadowMap } from "three";
 import { Canvas } from "@react-three/fiber";
 import { Helper, OrbitControls, OrthographicCamera } from "@react-three/drei";
@@ -87,6 +87,40 @@ function App() {
     setHoveredSlot(null);
   }, []);
 
+  const handleSave = useCallback(() => {
+    const json = layout.toJSON();
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "board.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [layout]);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleLoadFile = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        try {
+          const loaded = HexLayout.fromJSON(ev.target?.result as string);
+          setLayout(loaded);
+          setSelectedSlot(null);
+          setHoveredSlot(null);
+        } catch {
+          // ignore invalid files
+        }
+      };
+      reader.readAsText(file);
+      e.target.value = "";
+    },
+    [],
+  );
+
   const handleDoubleClick = useCallback(
     (slot: AxialCoord | null) => {
       if (!slot) {
@@ -150,7 +184,56 @@ function App() {
     <>
       {showTutorial && <Tutorial onClose={() => setShowTutorial(false)} />}
       {(!selectedSlot || !layout.isSlotOccupied(selectedSlot)) && (
-        <div className="fixed bottom-[16%] left-1/2 -translate-x-1/2 z-10">
+        <div className="fixed bottom-[16%] left-1/2 -translate-x-1/2 z-10 flex gap-2">
+          <button
+            onClick={handleSave}
+            className="flex items-center gap-2 bg-black/60 backdrop-blur-sm text-white/80 hover:text-white rounded-xl px-4 py-2 text-sm font-medium transition-colors cursor-pointer"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            Save
+          </button>
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className="flex items-center gap-2 bg-black/60 backdrop-blur-sm text-white/80 hover:text-white rounded-xl px-4 py-2 text-sm font-medium transition-colors cursor-pointer"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+            Load
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="application/json"
+            className="hidden"
+            onChange={handleLoadFile}
+          />
           <button
             onClick={handleReset}
             className="flex items-center gap-2 bg-black/60 backdrop-blur-sm text-white/80 hover:text-white rounded-xl px-4 py-2 text-sm font-medium transition-colors cursor-pointer"
